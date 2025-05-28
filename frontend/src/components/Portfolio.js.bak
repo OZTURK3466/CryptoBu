@@ -1,0 +1,197 @@
+import React, { useState } from 'react';
+
+const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
+  const [showSellModal, setShowSellModal] = useState(false);
+  const [selectedHolding, setSelectedHolding] = useState(null);
+  const [sellQuantity, setSellQuantity] = useState('');
+
+  const handleSellClick = (holding) => {
+    setSelectedHolding(holding);
+    setSellQuantity('');
+    setShowSellModal(true);
+  };
+
+  const handleSellConfirm = async () => {
+    if (!sellQuantity || parseFloat(sellQuantity) <= 0) {
+      alert('Veuillez entrer une quantité valide');
+      return;
+    }
+
+    if (parseFloat(sellQuantity) > parseFloat(selectedHolding.quantity)) {
+      alert('Quantité insuffisante');
+      return;
+    }
+
+    try {
+      await onTrade('sell', selectedHolding.crypto_id, parseFloat(sellQuantity));
+      setShowSellModal(false);
+      setSelectedHolding(null);
+      setSellQuantity('');
+    } catch (error) {
+      console.error('Erreur lors de la vente:', error);
+    }
+  };
+
+  const totalPortfolioValue = (portfolio.total_crypto_value || 0) + (portfolio.cash_balance || 0);
+
+  return (
+    <div className="portfolio">
+      <h3>💼 Mon Portefeuille</h3>
+      
+      <div className="portfolio-summary">
+        <div className="summary-row">
+          <span>Cryptomonnaies:</span>
+          <span className="value">${portfolio.total_crypto_value.toFixed(2)}</span>
+        </div>
+        <div className="summary-row">
+          <span>Liquidités:</span>
+          <span className="value">${portfolio.cash_balance.toFixed(2)}</span>
+        </div>
+        <div className="summary-row total">
+          <span>Total:</span>
+          <span className="value">${totalPortfolioValue.toFixed(2)}</span>
+        </div>
+      </div>
+
+      <div className="holdings-list">
+        {portfolio.holdings && portfolio.holdings.length > 0 ? (
+          portfolio.holdings.map((holding) => {
+            const currentPrice = prices[holding.crypto_id]?.usd || 0;
+            const currentValue = parseFloat(holding.quantity || 0) * (currentPrice || 0);
+            const avgBuyPrice = parseFloat(holding.avg_buy_price || 0);
+            const quantity = parseFloat(holding.quantity || 0);
+            const profitLoss = currentValue - (quantity * avgBuyPrice);
+            const profitLossPercentage = avgBuyPrice > 0 ? (profitLoss / (quantity * avgBuyPrice)) * 100 : 0;
+            const isProfit = profitLoss >= 0;
+
+            return (
+              <div key={holding.crypto_id} className="holding-card">
+                <div className="holding-header">
+                  <div className="crypto-info">
+                    <span className="crypto-name">
+                      {cryptoNames[holding.crypto_id] || holding.crypto_id}
+                    </span>
+                    <span className="crypto-symbol">{holding.crypto_id.toUpperCase()}</span>
+                  </div>
+                  <button
+                    className="sell-btn"
+                    onClick={() => handleSellClick(holding)}
+                  >
+                    Vendre
+                  </button>
+                </div>
+
+                <div className="holding-details">
+                  <div className="detail-row">
+                    <span>Quantité:</span>
+                    <span>{parseFloat(holding.quantity).toFixed(8)}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span>Prix moyen d'achat:</span>
+                    <span>${parseFloat(holding.avg_buy_price).toFixed(2)}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span>Prix actuel:</span>
+                    <span>${currentPrice.toFixed(2)}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span>Valeur actuelle:</span>
+                    <span>${currentValue.toFixed(2)}</span>
+                  </div>
+                  <div className={`detail-row profit-loss ${isProfit ? 'profit' : 'loss'}`}>
+                    <span>P&L:</span>
+                    <span>
+                      {isProfit ? '+' : ''}${profitLoss.toFixed(2)}
+                      ({isProfit ? '+' : ''}{profitLossPercentage.toFixed(2)}%)
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="no-holdings">
+            <p>Votre portefeuille est vide</p>
+            <p>Commencez par acheter des cryptomonnaies !</p>
+          </div>
+        )}
+      </div>
+
+      {/* Modal de vente */}
+      {showSellModal && selectedHolding && (
+        <div className="modal-overlay" onClick={() => setShowSellModal(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h4>Vendre {cryptoNames[selectedHolding.crypto_id]}</h4>
+              <button 
+                className="close-btn"
+                onClick={() => setShowSellModal(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="modal-content">
+              <div className="holding-info">
+                <p>Quantité détenue: {parseFloat(selectedHolding.quantity).toFixed(8)}</p>
+                <p>Prix actuel: ${(prices[selectedHolding.crypto_id]?.usd || 0).toFixed(2)}</p>
+              </div>
+
+              <div className="sell-input">
+                <label>Quantité à vendre:</label>
+                <input
+                  type="number"
+                  value={sellQuantity}
+                  onChange={(e) => setSellQuantity(e.target.value)}
+                  placeholder="0.001"
+                  step="0.00001"
+                  max={selectedHolding.quantity}
+                  min="0"
+                />
+              </div>
+
+              {sellQuantity && (
+                <div className="sell-preview">
+                  <p>Montant estimé: ${(parseFloat(sellQuantity) * (prices[selectedHolding.crypto_id]?.usd || 0)).toFixed(2)}</p>
+                </div>
+              )}
+
+              <div className="quick-sell-buttons">
+                <button onClick={() => setSellQuantity((parseFloat(selectedHolding.quantity) * 0.25).toString())}>
+                  25%
+                </button>
+                <button onClick={() => setSellQuantity((parseFloat(selectedHolding.quantity) * 0.5).toString())}>
+                  50%
+                </button>
+                <button onClick={() => setSellQuantity((parseFloat(selectedHolding.quantity) * 0.75).toString())}>
+                  75%
+                </button>
+                <button onClick={() => setSellQuantity(selectedHolding.quantity)}>
+                  100%
+                </button>
+              </div>
+            </div>
+
+            <div className="modal-actions">
+              <button
+                className="cancel-btn"
+                onClick={() => setShowSellModal(false)}
+              >
+                Annuler
+              </button>
+              <button
+                className="confirm-sell-btn"
+                onClick={handleSellConfirm}
+                disabled={!sellQuantity || parseFloat(sellQuantity) <= 0}
+              >
+                Confirmer la vente
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Portfolio;

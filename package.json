@@ -1,0 +1,15 @@
+{
+  "name": "crypto-trading-platform",
+  "version": "1.0.0",
+  "description": "Plateforme complète de trading crypto",
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail \"npm run backend\" \"npm run frontend\" \"npm run bot\"",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm start",
+    "bot": "cd discord-bot && npm run simple",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,2095 @@
+/* Import des polices Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* Variables CSS Améliorées */
+:root {
+  --primary-color: #00D4AA;
+  --primary-gradient: linear-gradient(135deg, #00D4AA 0%, #00E4BB 50%, #00F5CC 100%);
+  --secondary-color: #1E1E2E;
+  --accent-color: #7C3AED;
+  --accent-gradient: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%);
+  --success-color: #10B981;
+  --success-gradient: linear-gradient(135deg, #10B981 0%, #14C085 100%);
+  --danger-color: #EF4444;
+  --danger-gradient: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+  --warning-color: #F59E0B;
+  --text-primary: #FFFFFF;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --background-dark: #0B0B0F;
+  --background-card: #1A1A2E;
+  --background-card-hover: #22223A;
+  --border-color: #374151;
+  --border-hover: #4B5563;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 20px rgba(0, 212, 170, 0.15);
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset et styles de base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--background-dark);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  font-feature-settings: 'cv11', 'ss01';
+  font-variant-numeric: tabular-nums;
+}
+
+.app {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at top, rgba(0, 212, 170, 0.1) 0%, transparent 50%), 
+              radial-gradient(ellipse at bottom, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+              var(--background-dark);
+}
+
+/* Header amélioré */
+.app-header {
+  background: rgba(26, 26, 46, 0.8);
+  backdrop-filter: blur(20px);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-header h1 {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  position: relative;
+}
+
+.app-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--primary-gradient);
+  border-radius: 1px;
+  opacity: 0.5;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(10px);
+}
+
+.user-info span {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.balance {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 1.25rem !important;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Layout principal */
+.main-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.left-panel, .right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Cards de base améliorées */
+.card {
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  border-radius: var(--border-radius-lg);
+  transition: var(--transition);
+  overflow: hidden;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 170, 0.5), transparent);
+}
+
+.card:hover {
+  border-color: rgba(0, 212, 170, 0.3);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+/* Loading states */
+.loading, .chart-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  background: var(--card);
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  position: relative;
+}
+
+.loading::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--primary-color);
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Sélecteur de crypto */
+.crypto-selector {
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(20px);
+  padding: 2rem;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  transition: var(--transition);
+}
+
+.crypto-selector:hover {
+  border-color: rgba(0, 212, 170, 0.3);
+  box-shadow: var(--shadow-lg);
+}
+
+.crypto-selector h3 {
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+  font-size: 1.375rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.crypto-selector h3::before {
+  content: '⚡';
+  font-size: 1.5rem;
+}
+
+.crypto-select {
+  width: 100%;
+  padding: 1rem;
+  background: rgba(15, 15, 26, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+}
+
+.crypto-select:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+}
+
+.crypto-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(0, 212, 170, 0.15);
+}
+
+/* Prix List - Complètement redesigné */
+.price-list {
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.price-list:hover {
+  border-color: rgba(0, 212, 170, 0.3);
+  box-shadow: var(--shadow-glow);
+}
+
+.price-list h3 {
+  padding: 2rem 2rem 1rem;
+  margin: 0;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.price-list h3::before {
+  content: '📈';
+  font-size: 1.75rem;
+  filter: drop-shadow(0 0 10px rgba(0, 212, 170, 0.5));
+}
+
+.price-list-header {
+  padding: 1rem 2rem;
+  background: rgba(15, 15, 26, 0.5);
+  border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.header-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.price-list-body {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.price-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.2);
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+
+.price-row:last-child {
+  border-bottom: none;
+}
+
+.price-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--primary-gradient);
+  transition: var(--transition);
+}
+
+.price-row:hover {
+  background: rgba(0, 212, 170, 0.05);
+  transform: translateX(4px);
+}
+
+.price-row:hover::before {
+  width: 4px;
+}
+
+.price-row.selected {
+  background: rgba(0, 212, 170, 0.1);
+  border-left: 4px solid var(--primary-color);
+  box-shadow: inset 0 0 20px rgba(0, 212, 170, 0.1);
+}
+
+.crypto-cell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.crypto-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: var(--primary-gradient);
+  color: var(--background-dark);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.crypto-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
+.crypto-icon img {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  z-index: 1;
+  position: relative;
+}
+
+.crypto-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.crypto-name {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: var(--text-primary);
+}
+
+.crypto-symbol {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.price-cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.price {
+  font-weight: 700;
+  font-size: 1.125rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-primary);
+}
+
+.price-eur {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.change-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.change {
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: var(--transition);
+}
+
+.change-cell.positive .change {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34D399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.change-cell.negative .change {
+  background: rgba(239, 68, 68, 0.15);
+  color: #F87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.change::before {
+  content: '↗';
+  font-size: 1rem;
+}
+
+.change-cell.negative .change::before {
+  content: '↘';
+}
+
+/* Market Summary amélioré */
+.market-summary {
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), rgba(124, 58, 237, 0.1));
+  border-top: 1px solid rgba(55, 65, 81, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.market-summary h4 {
+  margin-bottom: 1.5rem;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.market-summary h4::before {
+  content: '📊';
+  font-size: 1.5rem;
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(26, 26, 46, 0.5);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  transition: var(--transition);
+}
+
+.stat:hover {
+  border-color: rgba(0, 212, 170, 0.3);
+  transform: translateY(-2px);
+}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--primary-color);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Portfolio amélioré */
+.portfolio {
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.portfolio:hover {
+  border-color: rgba(0, 212, 170, 0.3);
+  box-shadow: var(--shadow-glow);
+}
+
+.portfolio h3 {
+  padding: 2rem 2rem 1rem;
+  margin: 0;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.portfolio h3::before {
+  content: '💼';
+  font-size: 1.75rem;
+  filter: drop-shadow(0 0 10px rgba(0, 212, 170, 0.5));
+}
+
+.portfolio-summary {
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), rgba(124, 58, 237, 0.1));
+  border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.2);
+}
+
+.summary-row:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.summary-row.total {
+  font-weight: 700;
+  font-size: 1.125rem;
+  padding: 1rem 0;
+  border-top: 2px solid var(--primary-color);
+  margin-top: 1rem;
+  background: rgba(0, 212, 170, 0.05);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+}
+
+.value {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.125rem;
+}
+
+.holdings-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.holding-card {
+  padding: 2rem;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.2);
+  transition: var(--transition);
+  position: relative;
+}
+
+.holding-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--primary-gradient);
+  transition: var(--transition);
+}
+
+.holding-card:hover {
+  background: rgba(0, 212, 170, 0.05);
+  transform: translateX(4px);
+}
+
+.holding-card:hover::before {
+  width: 4px;
+}
+
+.holding-card:last-child {
+  border-bottom: none;
+}
+
+.holding-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.sell-btn {
+  padding: 0.5rem 1.25rem;
+  background: var(--danger-gradient);
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  font-size: 0.875rem;
+  box-shadow: var(--shadow);
+}
+
+.sell-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.holding-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(15, 15, 26, 0.5);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  transition: var(--transition);
+}
+
+.detail-row:hover {
+  border-color: rgba(0, 212, 170, 0.3);
+}
+
+.detail-row span:first-child {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.detail-row span:last-child {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.profit-loss.profit {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.profit-loss.profit span:last-child {
+  color: #34D399;
+}
+
+.profit-loss.loss {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.profit-loss.loss span:last-child {
+  color: #F87171;
+}
+
+.no-holdings {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.no-holdings p:first-child {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+/* Trading Panel */
+.trading-panel {
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  padding: 2rem;
+  transition: var(--transition);
+}
+
+.trading-panel:hover {
+  border-color: rgba(0, 212, 170, 0.3);
+  box-shadow: var(--shadow-lg);
+}
+
+.trading-panel h3 {
+  margin-bottom: 2rem;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.trading-panel h3::before {
+  content: '📊';
+  font-size: 1.75rem;
+}
+
+/* Chart Container */
+.chart-container {
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.chart-container:hover {
+  border-color: rgba(0, 212, 170, 0.3);
+  box-shadow: var(--shadow-glow);
+}
+
+.chart-controls {
+  padding: 2rem;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: rgba(15, 15, 26, 0.3);
+}
+
+.timeframe-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.timeframe-btn {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(55, 65, 81, 0.5);
+  background: rgba(26, 26, 46, 0.5);
+  color: var(--text-secondary);
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.875rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.timeframe-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.timeframe-btn.active {
+  background: var(--primary-gradient);
+  border-color: var(--primary-color);
+  color: var(--background-dark);
+  box-shadow: var(--shadow);
+}
+
+.current-price {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 212, 170, 0.1);
+  border: 1px solid rgba(0, 212, 170, 0.3);
+  border-radius: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.price-label {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.price-value {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.chart-wrapper {
+  padding: 2rem;
+  height: 400px;
+  background: var(--background-dark);
+}
+
+.chart-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: var(--danger-color);
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .right-panel {
+    order: -1;
+  }
+  
+  .summary-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .app-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .main-content {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .price-row {
+    padding: 1rem;
+    grid-template-columns: 1.5fr 1fr 1fr;
+  }
+  
+  .crypto-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.25rem;
+  }
+  
+  .crypto-name {
+    font-size: 1rem;
+  }
+  
+  .summary-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .holding-details {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .current-price {
+    justify-content: center;
+  }
+}
+
+/* Animations globales */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.price-row, .stat, .card, .holding-card {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.crypto-icon {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Scrollbar personnalisée */
+.price-list-body::-webkit-scrollbar,
+.holdings-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.price-list-body::-webkit-scrollbar-track,
+.holdings-list::-webkit-scrollbar-track {
+  background: rgba(15, 15, 26, 0.5);
+}
+
+.price-list-body::-webkit-scrollbar-thumb,
+.holdings-list::-webkit-scrollbar-thumb {
+  background: var(--primary-gradient);
+  border-radius: 3px;
+}
+
+.price-list-body::-webkit-scrollbar-thumb:hover,
+.holdings-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-gradient);
+}
+
+/* Effets de particules */
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 1;
+  }
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.modal {
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+  background: rgba(15, 15, 26, 0.5);
+}
+
+.modal-header h4 {
+  margin: 0;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.375rem;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: var(--transition);
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: var(--text-primary);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.modal-content {
+  padding: 2rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  padding: 2rem;
+  border-top: 1px solid rgba(55, 65, 81, 0.3);
+  background: rgba(15, 15, 26, 0.3);
+}
+
+/* Inputs et boutons globaux */
+input, select, button {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.15);
+}
+
+/* États de succès et d'erreur */
+.success {
+  color: var(--success-color);
+}
+
+.error {
+  color: var(--danger-color);
+}
+
+.warning {
+  color: var(--warning-color);
+}
+
+/* Tooltips */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition);
+  z-index: 1000;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}
+
+/* =========================== */
+/* DISCORD INVITE SECTION */
+/* =========================== */
+
+.discord-invite-section {
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(88, 101, 242, 0.3);
+  overflow: hidden;
+  transition: var(--transition);
+  margin-top: 2rem;
+}
+
+.discord-invite-section:hover {
+  border-color: rgba(88, 101, 242, 0.5);
+  box-shadow: 0 0 20px rgba(88, 101, 242, 0.15);
+}
+
+.discord-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  cursor: pointer;
+  transition: var(--transition);
+  background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(114, 137, 218, 0.1));
+}
+
+.discord-header:hover {
+  background: linear-gradient(135deg, rgba(88, 101, 242, 0.15), rgba(114, 137, 218, 0.15));
+}
+
+.discord-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.discord-logo {
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(135deg, #5865F2, #7289DA);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
+}
+
+.discord-text h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #5865F2, #7289DA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.discord-text p {
+  margin: 0.25rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.discord-arrow {
+  font-size: 1.5rem;
+  color: #5865F2;
+  transition: var(--transition);
+  transform: rotate(0deg);
+}
+
+.discord-arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.discord-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.discord-content.expanded {
+  max-height: 1000px;
+  transition: max-height 0.5s ease-in;
+}
+
+.discord-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  padding: 2rem;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+}
+
+.feature-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(15, 15, 26, 0.8);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  border-radius: 12px;
+  transition: var(--transition);
+}
+
+.feature-card:hover {
+  border-color: rgba(88, 101, 242, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #5865F2, #7289DA);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.feature-info h4 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.feature-info p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.discord-commands {
+  padding: 2rem;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+}
+
+.discord-commands h4 {
+  margin: 0 0 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #5865F2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.commands-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.command-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(15, 15, 26, 0.8);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.command-item:hover {
+  border-color: rgba(88, 101, 242, 0.3);
+  background: rgba(88, 101, 242, 0.1);
+}
+
+.command-item code {
+  background: rgba(88, 101, 242, 0.2);
+  color: #7289DA;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.command-item span {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.discord-actions {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+}
+
+.invite-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #5865F2, #7289DA);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
+  text-decoration: none;
+}
+
+.invite-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
+  background: linear-gradient(135deg, #4752C4, #5B6CD8);
+}
+
+.btn-icon {
+  font-size: 1.25rem;
+}
+
+.discord-stats {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #5865F2;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.discord-preview {
+  padding: 2rem;
+}
+
+.discord-preview h4 {
+  margin: 0 0 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #5865F2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.discord-mock {
+  background: #36393f;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #42464d;
+}
+
+.discord-message {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.discord-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: #5865F2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.discord-msg-content {
+  flex: 1;
+}
+
+.discord-username {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.discord-embed {
+  background: #2f3136;
+  border-left: 4px solid #5865F2;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.embed-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.embed-icon {
+  font-size: 1.25rem;
+  color: #F7931A;
+}
+
+.embed-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.embed-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.embed-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.field-name {
+  font-size: 0.75rem;
+  color: #b9bbbe;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.field-value {
+  font-size: 0.875rem;
+  color: #ffffff;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.field-value.positive {
+  color: #57F287;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .discord-features {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+  
+  .feature-card {
+    padding: 1rem;
+  }
+  
+  .feature-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.5rem;
+  }
+  
+  .commands-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .command-item {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .discord-stats {
+    gap: 1rem;
+  }
+  
+  .embed-fields {
+    grid-template-columns: 1fr;
+  }
+  
+  .discord-actions {
+    padding: 1.5rem;
+  }
+  
+  .invite-btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+/* =========================== */
+/* CRYPTO SELECTOR MODERNE */
+/* =========================== */
+
+.crypto-selector-modern {
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.crypto-selector-modern:hover {
+  border-color: rgba(0, 212, 170, 0.3);
+  box-shadow: var(--shadow-glow);
+}
+
+.selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2rem 1rem;
+}
+
+.selector-header h3 {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 800;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.view-controls {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(15, 15, 26, 0.8);
+  border-radius: 8px;
+  padding: 0.25rem;
+  border: 1px solid rgba(55, 65, 81, 0.3);
+}
+
+.view-btn {
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.view-btn:hover {
+  color: var(--text-primary);
+  background: rgba(55, 65, 81, 0.3);
+}
+
+.view-btn.active {
+  background: var(--primary-color);
+  color: var(--background-dark);
+}
+
+.search-container {
+  padding: 0 2rem 1.5rem;
+}
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  background: rgba(15, 15, 26, 0.8);
+  border: 1px solid rgba(55, 65, 81, 0.5);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.15);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.clear-search {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.clear-search:hover {
+  color: var(--text-primary);
+  background: rgba(55, 65, 81, 0.3);
+}
+
+/* Top Performers */
+.top-performers {
+  padding: 0 2rem 1.5rem;
+}
+
+.top-performers h4 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.performers-list {
+  display: flex;
+  gap: 1rem;
+}
+
+.performer-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(15, 15, 26, 0.8);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  flex: 1;
+  min-width: 0;
+}
+
+.performer-card:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.performer-card.selected {
+  border-color: var(--primary-color);
+  background: rgba(0, 212, 170, 0.1);
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.performer-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--background-dark);
+  flex-shrink: 0;
+}
+
+.performer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.performer-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.performer-change {
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Crypto Grid */
+.crypto-grid {
+  padding: 0 2rem;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.crypto-grid.grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.crypto-grid.list-view {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.crypto-card {
+  background: rgba(15, 15, 26, 0.8);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.crypto-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--primary-gradient);
+  transform: scaleX(0);
+  transition: var(--transition);
+}
+
+.crypto-card:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.crypto-card:hover::before {
+  transform: scaleX(1);
+}
+
+.crypto-card.selected {
+  border-color: var(--primary-color);
+  background: rgba(0, 212, 170, 0.1);
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.crypto-card.selected::before {
+  transform: scaleX(1);
+}
+
+.crypto-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.crypto-card-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--background-dark);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.crypto-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.crypto-card-name {
+  margin: 0 0 0.25rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crypto-card-symbol {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.selected-indicator {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  width: 2rem;
+  height: 2rem;
+  background: var(--success-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  animation: bounceIn 0.3s ease-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.crypto-card-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.list-view .crypto-card {
+  padding: 1rem 1.5rem;
+}
+
+.list-view .crypto-card-header {
+  margin-bottom: 0;
+}
+
+.list-view .crypto-card-stats {
+  flex-direction: row;
+  gap: 2rem;
+  margin-left: 4rem;
+}
+
+.list-view .crypto-card-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.25rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: rgba(26, 26, 46, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba(55, 65, 81, 0.3);
+}
+
+.list-view .stat-row {
+  background: transparent;
+  border: none;
+  padding: 0;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 100px;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.stat-value.positive {
+  color: #34D399;
+}
+
+.stat-value.negative {
+  color: #F87171;
+}
+
+.crypto-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 212, 170, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: var(--transition);
+  border-radius: 12px;
+}
+
+.crypto-card:hover .crypto-card-overlay {
+  opacity: 1;
+}
+
+.overlay-text {
+  color: var(--background-dark);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.crypto-card.selected .crypto-card-overlay {
+  display: none;
+}
+
+/* No Results */
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.no-results-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.no-results p {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.no-results small {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* Footer */
+.selector-footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid rgba(55, 65, 81, 0.3);
+  background: linear-gradient(135deg, rgba(0, 212, 170, 0.05), rgba(124, 58, 237, 0.05));
+}
+
+.footer-stats {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.footer-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-stat-number {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.footer-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Scrollbar */
+.crypto-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.crypto-grid::-webkit-scrollbar-track {
+  background: rgba(15, 15, 26, 0.5);
+}
+
+.crypto-grid::-webkit-scrollbar-thumb {
+  background: var(--primary-gradient);
+  border-radius: 3px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .selector-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .performers-list {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .crypto-grid.grid-view {
+    grid-template-columns: 1fr;
+  }
+  
+  .list-view .crypto-card-stats {
+    flex-direction: column;
+    margin-left: 0;
+    gap: 0.5rem;
+  }
+  
+  .footer-stats {
+    gap: 1rem;
+  }
+  
+  .footer-stat-number {
+    font-size: 1.25rem;
+  }
+}

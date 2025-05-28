@@ -1,0 +1,436 @@
+/* Variables CSS */
+:root {
+  --primary-color: #00D4AA;
+  --secondary-color: #1E1E2E;
+  --accent-color: #7C3AED;
+  --success-color: #10B981;
+  --danger-color: #EF4444;
+  --warning-color: #F59E0B;
+  --text-primary: #FFFFFF;
+  --text-secondary: #9CA3AF;
+  --background-dark: #0F0F1A;
+  --background-card: #1A1A2E;
+  --border-color: #374151;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --gradient-primary: linear-gradient(135deg, #00D4AA 0%, #7C3AED 100%);
+  --gradient-dark: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+}
+
+/* Reset et styles de base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--background-dark);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.app {
+  min-height: 100vh;
+  background: var(--background-dark);
+}
+
+/* Header */
+.app-header {
+  background: var(--gradient-dark);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
+
+.app-header h1 {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.user-info span {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.balance {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 1.1rem !important;
+}
+
+/* Layout principal */
+.main-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.left-panel, .right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Loading */
+.loading, .chart-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  background: var(--background-card);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+/* Composants de base */
+.crypto-selector {
+  background: var(--background-card);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.crypto-selector h3 {
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+.crypto-select {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--background-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.crypto-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+}
+
+/* Chart */
+.chart-container {
+  background: var(--background-card);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.chart-controls {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.timeframe-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.timeframe-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.timeframe-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--text-primary);
+}
+
+.timeframe-btn.active {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--background-dark);
+  font-weight: 600;
+}
+
+.current-price {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.price-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.price-value {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.chart-wrapper {
+  padding: 1rem;
+  height: 400px;
+}
+
+.chart-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: var(--danger-color);
+}
+
+/* Trading Panel */
+.trading-panel {
+  background: var(--background-card);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+}
+
+.trading-panel h3 {
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+  font-size: 1.3rem;
+}
+
+.crypto-info {
+  margin-bottom: 1.5rem;
+}
+
+.selected-crypto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--background-dark);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.crypto-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.crypto-price {
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.trade-type-selector {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.trade-type-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.trade-type-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--text-primary);
+}
+
+.trade-type-btn.active.buy {
+  background: var(--success-color);
+  border-color: var(--success-color);
+  color: white;
+}
+
+.trade-type-btn.active.sell {
+  background: var(--danger-color);
+  border-color: var(--danger-color);
+  color: white;
+}
+
+.trade-inputs {
+  margin-bottom: 1.5rem;
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--background-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+}
+
+.trade-preview {
+  background: var(--background-dark);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  margin: 1rem 0;
+}
+
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.preview-row:last-child {
+  margin-bottom: 0;
+}
+
+.quick-amounts {
+  margin-top: 1rem;
+}
+
+.quick-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.quick-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.quick-buttons button {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+}
+
+.quick-buttons button:hover {
+  border-color: var(--primary-color);
+  color: var(--text-primary);
+}
+
+.trade-button {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.trade-button.buy {
+  background: var(--success-color);
+  color: white;
+}
+
+.trade-button.sell {
+  background: var(--danger-color);
+  color: white;
+}
+
+.trade-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.trade-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.balance-info {
+  padding: 1rem;
+  background: var(--background-dark);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.balance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.balance-amount {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+/* Prix et Portfolio - styles de base pour que ça fonctionne */
+.price-list, .portfolio {
+  background: var(--background-card);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+}
+
+.price-list h3, .portfolio h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}

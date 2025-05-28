@@ -1,0 +1,36 @@
+{
+  "name": "crypto-discord-bot",
+  "version": "1.0.0",
+  "description": "Bot Discord pour afficher les prix des cryptomonnaies en temps réel",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "nodemon bot.js",
+    "deploy": "node deploy-commands.js",
+    "simple": "node bot-simple.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "crypto",
+    "bitcoin",
+    "ethereum"
+  ],
+  "author": "Votre Nom",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "axios": "^1.6.2",
+    "canvas": "^2.11.2",
+    "chart.js": "^4.4.0",
+    "dotenv": "^16.3.1",
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

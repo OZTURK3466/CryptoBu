@@ -1228,8 +1228,27 @@ input:focus, select:focus {
 }
 
 .discord-content.expanded {
-  max-height: 1000px;
+  max-height: 80vh; /* Limite la hauteur à 80% de l'écran */
+  overflow-y: auto; /* Ajoute une barre de défilement verticale */
   transition: max-height 0.5s ease-in;
+}
+
+.discord-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.discord-content::-webkit-scrollbar-track {
+  background: rgba(15, 15, 26, 0.5);
+  border-radius: 3px;
+}
+
+.discord-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #5865F2, #7289DA);
+  border-radius: 3px;
+}
+
+.discord-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #4752C4, #5B6CD8);
 }
 
 .discord-features {
@@ -1389,6 +1408,61 @@ input:focus, select:focus {
   font-weight: 800;
   color: #5865F2;
   font-family: 'JetBrains Mono', monospace;
+}.discord-preview {
+  padding: 2rem;
+}
+
+.discord-preview h4 {
+  margin: 0 0 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #5865F2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.discord-mock {
+  background: #36393f;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #42464d;
+}
+
+.discord-message {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.discord-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: #5865F2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.discord-msg-content {
+  flex: 1;
+}
+
+.discord-username {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.discord-embed {
+  background: #2f3136;
+  border-left: 4px solid #5865F2;
+  border-radius: 4px;
+  padding: 1rem;
 }
 
 .stat-label {

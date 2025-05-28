@@ -1,0 +1,10 @@
+
+> backend@1.0.0 start
+> node server.js
+
+Serveur backend démarré sur le port 3001
+WebSocket server démarré sur le port 8080
+Client connecté au WebSocket
+Client déconnecté du WebSocket
+Client connecté au WebSocket
+Client connecté au WebSocket

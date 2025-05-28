@@ -1,6 +1,16 @@
 import React from 'react';
 
-const PriceList = ({ prices, cryptoNames, onSelectCrypto, selectedCrypto }) => {
+const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCrypto }) => {
+  // Vérification de sécurité pour éviter les erreurs
+  if (!prices || Object.keys(prices).length === 0) {
+    return (
+      <div className="price-list">
+        <h3>Prix en Temps Réel</h3>
+        <div className="loading-message">Chargement des prix...</div>
+      </div>
+    );
+  }
+
   const sortedCryptos = Object.keys(prices).sort((a, b) => {
     const priceA = prices[a]?.usd || 0;
     const priceB = prices[b]?.usd || 0;
@@ -82,6 +92,26 @@ const PriceList = ({ prices, cryptoNames, onSelectCrypto, selectedCrypto }) => {
     return `$${marketCap.toFixed(0)}`;
   };
 
+  // Fonction sécurisée pour obtenir le top performer
+  const getTopPerformer = () => {
+    if (sortedCryptos.length === 0) return 'N/A';
+    
+    const topCrypto = sortedCryptos.reduce((top, cryptoId) => {
+      const change = prices[cryptoId]?.usd_24h_change || 0;
+      const topChange = prices[top]?.usd_24h_change || 0;
+      return change > topChange ? cryptoId : top;
+    }, sortedCryptos[0]);
+    
+    if (!topCrypto) return 'N/A';
+    
+    const cryptoName = cryptoNames[topCrypto] || topCrypto || 'Unknown';
+    const displayName = typeof cryptoName === 'string' && cryptoName.length > 0 
+      ? cryptoName.split(' ')[0] 
+      : 'Unknown';
+    
+    return getCryptoIcon(topCrypto) + ' ' + displayName;
+  };
+
   const volatility = getVolatilityIndicator();
   const totalMarketCap = getTotalMarketCap();
 
@@ -108,7 +138,7 @@ const PriceList = ({ prices, cryptoNames, onSelectCrypto, selectedCrypto }) => {
             <div
               key={cryptoId}
               className={`price-row ${isSelected ? 'selected' : ''}`}
-              onClick={() => onSelectCrypto(cryptoId)}
+              onClick={() => onSelectCrypto && onSelectCrypto(cryptoId)}
               style={{
                 '--pulse-color': getPulseColor(change24h)
               }}
@@ -184,14 +214,7 @@ const PriceList = ({ prices, cryptoNames, onSelectCrypto, selectedCrypto }) => {
           <div className="stat">
             <span className="stat-label">Top Performer</span>
             <span className="stat-value" style={{ color: '#34D399' }}>
-              {(() => {
-                const topCrypto = sortedCryptos.reduce((top, cryptoId) => {
-                  const change = prices[cryptoId]?.usd_24h_change || 0;
-                  const topChange = prices[top]?.usd_24h_change || 0;
-                  return change > topChange ? cryptoId : top;
-                }, sortedCryptos[0]);
-                return getCryptoIcon(topCrypto) + ' ' + (cryptoNames[topCrypto] || topCrypto).split(' ')[0];
-              })()}
+              {getTopPerformer()}
             </span>
           </div>
         </div>

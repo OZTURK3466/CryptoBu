@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const CryptoSelector = ({ selectedCrypto, onSelectCrypto, cryptoNames, prices }) => {
+const CryptoSelector = ({ selectedCrypto, onSelectCrypto, cryptoNames }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isGridView, setIsGridView] = useState(true);
 
@@ -36,45 +36,18 @@ const CryptoSelector = ({ selectedCrypto, onSelectCrypto, cryptoNames, prices })
     return colors[cryptoId] || 'linear-gradient(135deg, #00D4AA 0%, #00E4BB 100%)';
   };
 
-  const formatPrice = (price) => {
-    if (!price) return '$0.00';
-    if (price < 0.01) return `$${price.toFixed(6)}`;
-    if (price < 1) return `$${price.toFixed(4)}`;
-    return `$${price.toFixed(2)}`;
-  };
-
-  const formatChange = (change) => {
-    if (!change) return '+0.00%';
-    const formatted = change.toFixed(2);
-    return change >= 0 ? `+${formatted}%` : `${formatted}%`;
-  };
-
   const cryptoData = Object.keys(cryptoNames).map(cryptoId => ({
     id: cryptoId,
     name: cryptoNames[cryptoId],
     symbol: cryptoId.replace('-', '').toUpperCase(),
     icon: getCryptoIcon(cryptoId),
-    color: getCryptoColor(cryptoId),
-    price: prices[cryptoId]?.usd || 0,
-    change24h: prices[cryptoId]?.usd_24h_change || 0,
-    marketCap: prices[cryptoId]?.usd_market_cap || 0
+    color: getCryptoColor(cryptoId)
   }));
 
   const filteredCryptos = cryptoData.filter(crypto =>
     crypto.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     crypto.symbol.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const topPerformers = [...cryptoData]
-    .sort((a, b) => (b.change24h || 0) - (a.change24h || 0))
-    .slice(0, 3);
-
-  const formatMarketCap = (marketCap) => {
-    if (marketCap >= 1e12) return `$${(marketCap / 1e12).toFixed(1)}T`;
-    if (marketCap >= 1e9) return `$${(marketCap / 1e9).toFixed(1)}B`;
-    if (marketCap >= 1e6) return `$${(marketCap / 1e6).toFixed(1)}M`;
-    return `$${marketCap.toFixed(0)}`;
-  };
 
   return (
     <div className="crypto-selector-modern">
@@ -119,37 +92,6 @@ const CryptoSelector = ({ selectedCrypto, onSelectCrypto, cryptoNames, prices })
         </div>
       </div>
 
-      {!searchTerm && (
-        <div className="top-performers">
-          <h4>🔥 Top Performers 24h</h4>
-          <div className="performers-list">
-            {topPerformers.map(crypto => (
-              <div
-                key={crypto.id}
-                className={`performer-card ${selectedCrypto === crypto.id ? 'selected' : ''}`}
-                onClick={() => onSelectCrypto(crypto.id)}
-              >
-                <div 
-                  className="performer-icon"
-                  style={{ background: crypto.color }}
-                >
-                  {crypto.icon}
-                </div>
-                <div className="performer-info">
-                  <span className="performer-name">{crypto.name}</span>
-                  <span 
-                    className="performer-change"
-                    style={{ color: crypto.change24h >= 0 ? '#34D399' : '#F87171' }}
-                  >
-                    {formatChange(crypto.change24h)}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       <div className={`crypto-grid ${isGridView ? 'grid-view' : 'list-view'}`}>
         {filteredCryptos.map(crypto => (
           <div
@@ -171,29 +113,6 @@ const CryptoSelector = ({ selectedCrypto, onSelectCrypto, cryptoNames, prices })
               {selectedCrypto === crypto.id && (
                 <div className="selected-indicator">
                   ✓
-                </div>
-              )}
-            </div>
-
-            <div className="crypto-card-stats">
-              <div className="stat-row">
-                <span className="stat-label">Prix</span>
-                <span className="stat-value">{formatPrice(crypto.price)}</span>
-              </div>
-              
-              <div className="stat-row">
-                <span className="stat-label">24h</span>
-                <span 
-                  className={`stat-value ${crypto.change24h >= 0 ? 'positive' : 'negative'}`}
-                >
-                  {formatChange(crypto.change24h)}
-                </span>
-              </div>
-
-              {isGridView && (
-                <div className="stat-row">
-                  <span className="stat-label">Market Cap</span>
-                  <span className="stat-value">{formatMarketCap(crypto.marketCap)}</span>
                 </div>
               )}
             </div>
@@ -226,8 +145,8 @@ const CryptoSelector = ({ selectedCrypto, onSelectCrypto, cryptoNames, prices })
             <span className="footer-stat-label">Sélectionnée</span>
           </div>
           <div className="footer-stat">
-            <span className="footer-stat-number">📊</span>
-            <span className="footer-stat-label">Temps réel</span>
+            <span className="footer-stat-number">⚡</span>
+            <span className="footer-stat-label">Sélection rapide</span>
           </div>
         </div>
       </div>

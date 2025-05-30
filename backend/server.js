@@ -111,24 +111,39 @@ async function fetchCryptoPrices() {
 // Récupération des données historiques
 async function fetchHistoricalData(coinId, days = 7) {
   try {
+    console.log(`🔍 Appel CoinGecko API: ${coinId}, ${days} jours`);
+    
     const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart`, {
       params: {
         vs_currency: 'usd',
         days: days,
         interval: days <= 1 ? 'hourly' : 'daily'
-      }
+      },
+      timeout: 10000 // Timeout de 10 secondes
     });
     
-    return {
-      prices: response.data.prices,
-      volumes: response.data.total_volumes,
-      market_caps: response.data.market_caps
-    };
+    if (response.data && response.data.prices) {
+      console.log(`✅ CoinGecko API réponse: ${response.data.prices.length} points`);
+      return {
+        prices: response.data.prices,
+        volumes: response.data.total_volumes || [],
+        market_caps: response.data.market_caps || []
+      };
+    } else {
+      console.log(`❌ Réponse CoinGecko invalide pour ${coinId}`);
+      return null;
+    }
   } catch (error) {
-    console.error('Erreur lors de la récupération des données historiques:', error.message);
+    console.error(`❌ Erreur CoinGecko API pour ${coinId}:`, error.message);
+    
+    if (error.response) {
+      console.error(`Status: ${error.response.status}, Data:`, error.response.data);
+    }
+    
     return null;
   }
 }
+
 
 // Routes API publiques
 
@@ -152,14 +167,38 @@ app.get('/api/history/:coinId', async (req, res) => {
     const { coinId } = req.params;
     const { days = 7 } = req.query;
     
-    const data = await fetchHistoricalData(coinId, parseInt(days));
-    if (data) {
+    console.log(`📊 Récupération historique: ${coinId}, ${days} jours`);
+    
+    // Validation des paramètres
+    if (!coinId) {
+      return res.status(400).json({ error: 'ID de crypto manquant' });
+    }
+    
+    const numDays = parseInt(days);
+    if (isNaN(numDays) || numDays < 1 || numDays > 365) {
+      return res.status(400).json({ error: 'Nombre de jours invalide (1-365)' });
+    }
+    
+    const data = await fetchHistoricalData(coinId, numDays);
+    
+    if (data && data.prices && data.prices.length > 0) {
+      console.log(`✅ ${data.prices.length} points de données récupérés pour ${coinId}`);
       res.json(data);
     } else {
-      res.status(500).json({ error: 'Impossible de récupérer les données historiques' });
+      console.log(`❌ Aucune donnée pour ${coinId}`);
+      res.status(404).json({ 
+        error: 'Aucune donnée historique trouvée',
+        coinId: coinId,
+        days: numDays
+      });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('❌ Erreur historique:', error);
+    res.status(500).json({ 
+      error: 'Erreur lors de la récupération des données historiques',
+      details: error.message,
+      coinId: req.params.coinId
+    });
   }
 });
 

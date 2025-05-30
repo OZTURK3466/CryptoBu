@@ -23,41 +23,106 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [showRegister, setShowRegister] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
+  const [backendReady, setBackendReady] = useState(false);
+
+  // Vérifier si le backend est prêt
+  const checkBackendHealth = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/health`);
+      if (response.ok) {
+        setBackendReady(true);
+        return true;
+      }
+    } catch (error) {
+      console.log('Backend pas encore prêt...');
+    }
+    return false;
+  };
+
+  // Attendre que le backend soit prêt avant de connecter WebSocket
+  useEffect(() => {
+    const waitForBackend = async () => {
+      let attempts = 0;
+      const maxAttempts = 30;
+      
+      while (!backendReady && attempts < maxAttempts) {
+        const isReady = await checkBackendHealth();
+        if (isReady) break;
+        
+        attempts++;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
+      if (!backendReady && attempts >= maxAttempts) {
+        console.error('Backend non accessible après 30 tentatives');
+      }
+    };
+
+    waitForBackend();
+  }, [backendReady]);
 
   // Connexion WebSocket pour les prix en temps réel
   useEffect(() => {
-    const websocket = new WebSocket(WS_URL);
-    
-    websocket.onopen = () => {
-      console.log('Connecté au WebSocket');
-    };
-    
-    websocket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === 'price_update') {
-        setPrices(data.data);
+    if (!backendReady) return;
+
+    let websocket = null;
+    let reconnectTimeout = null;
+
+    const connectWebSocket = () => {
+      try {
+        websocket = new WebSocket(WS_URL);
+        
+        websocket.onopen = () => {
+          console.log('✅ Connecté au WebSocket');
+          setWs(websocket);
+        };
+        
+        websocket.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.type === 'price_update') {
+              setPrices(data.data);
+            }
+          } catch (error) {
+            console.error('Erreur parsing WebSocket data:', error);
+          }
+        };
+        
+        websocket.onclose = (event) => {
+          console.log('🔌 Connexion WebSocket fermée', event.code);
+          setWs(null);
+          
+          // Reconnexion automatique après 5 secondes si pas volontaire
+          if (event.code !== 1000) {
+            reconnectTimeout = setTimeout(() => {
+              console.log('🔄 Tentative de reconnexion WebSocket...');
+              connectWebSocket();
+            }, 5000);
+          }
+        };
+        
+        websocket.onerror = (error) => {
+          console.error('❌ Erreur WebSocket:', error);
+        };
+        
+      } catch (error) {
+        console.error('❌ Impossible de créer la connexion WebSocket:', error);
+        // Retry after 5 seconds
+        reconnectTimeout = setTimeout(connectWebSocket, 5000);
       }
     };
-    
-    websocket.onclose = () => {
-      console.log('Connexion WebSocket fermée');
-      // Reconnexion automatique après 5 secondes
-      setTimeout(() => {
-        const newWs = new WebSocket(WS_URL);
-        setWs(newWs);
-      }, 5000);
-    };
-    
-    websocket.onerror = (error) => {
-      console.error('Erreur WebSocket:', error);
-    };
-    
-    setWs(websocket);
+
+    connectWebSocket();
     
     return () => {
-      websocket.close();
+      if (reconnectTimeout) {
+        clearTimeout(reconnectTimeout);
+      }
+      if (websocket) {
+        websocket.close(1000); // Code 1000 = fermeture normale
+      }
     };
-  }, []);
+  }, [backendReady]);
 
   // Vérifier l'authentification au démarrage
   useEffect(() => {
@@ -83,8 +148,11 @@ function App() {
       setIsLoading(false);
     };
 
-    checkAuth();
-  }, []);
+    // Attendre que le backend soit prêt avant de vérifier l'auth
+    if (backendReady) {
+      checkAuth();
+    }
+  }, [backendReady]);
 
   // Animation en cascade pour les composants
   useEffect(() => {
@@ -181,6 +249,10 @@ function App() {
     authService.logout();
     setUser(null);
     setPortfolio({ holdings: [], total_crypto_value: 0, cash_balance: 0 });
+    
+    // Réinitialiser l'état de l'application
+    setPrices({});
+    setSelectedCrypto('bitcoin');
     
     // Animation de déconnexion
     createInfoNotification('Déconnexion réussie');
@@ -328,7 +400,7 @@ function App() {
   };
 
   // Loading screen pendant la vérification de l'auth
-  if (authLoading) {
+  if (authLoading || !backendReady) {
     return (
       <div className="app">
         <AnimatedBackground />
@@ -365,10 +437,10 @@ function App() {
             marginBottom: '1rem',
             animation: 'pulse 2s ease-in-out infinite'
           }}>
-            🔐 Vérification de l'authentification...
+            {!backendReady ? '🔧 Démarrage du backend...' : '🔐 Vérification de l\'authentification...'}
           </h2>
           <p style={{ color: '#9CA3AF', fontSize: '1.1rem' }}>
-            Chargement de votre session...
+            {!backendReady ? 'Connexion au serveur...' : 'Chargement de votre session...'}
           </p>
           <div style={{
             marginTop: '2rem',
@@ -524,14 +596,6 @@ function App() {
                 fontWeight: '600',
                 transition: 'all 0.3s ease'
               }}
-              onMouseEnter={(e) => {
-                e.target.style.background = 'rgba(0, 212, 170, 0.3)';
-                e.target.style.color = '#FFFFFF';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = 'rgba(0, 212, 170, 0.2)';
-                e.target.style.color = '#00D4AA';
-              }}
               title="Actualiser les données"
             >
               🔄 Refresh
@@ -548,14 +612,6 @@ function App() {
                 fontSize: '0.75rem',
                 fontWeight: '600',
                 transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = 'rgba(239, 68, 68, 0.3)';
-                e.target.style.color = '#FFFFFF';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = 'rgba(239, 68, 68, 0.2)';
-                e.target.style.color = '#F87171';
               }}
             >
               🚪 Déconnexion

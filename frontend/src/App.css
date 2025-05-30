@@ -2167,3 +2167,1010 @@ input:focus, select:focus {
     font-size: 1.25rem;
   }
 }
+
+/* ================================= */
+/* ARRIÈRE-PLAN ANIMÉ INTERACTIF */
+/* ================================= */
+
+/* Conteneur principal avec arrière-plan animé */
+.app {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  background: var(--background-dark);
+}
+
+/* Arrière-plan animé en couches */
+.animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  background: 
+    radial-gradient(ellipse at 20% 50%, rgba(0, 212, 170, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 40% 80%, rgba(239, 68, 68, 0.1) 0%, transparent 50%),
+    linear-gradient(135deg, #0B0B0F 0%, #1A1A2E 50%, #16213E 100%);
+  animation: backgroundShift 20s ease-in-out infinite;
+}
+
+/* Animation du dégradé de fond */
+@keyframes backgroundShift {
+  0%, 100% {
+    background: 
+      radial-gradient(ellipse at 20% 50%, rgba(0, 212, 170, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 40% 80%, rgba(239, 68, 68, 0.1) 0%, transparent 50%),
+      linear-gradient(135deg, #0B0B0F 0%, #1A1A2E 50%, #16213E 100%);
+  }
+  33% {
+    background: 
+      radial-gradient(ellipse at 80% 30%, rgba(0, 212, 170, 0.2) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 70%, rgba(124, 58, 237, 0.18) 0%, transparent 50%),
+      radial-gradient(ellipse at 60% 20%, rgba(239, 68, 68, 0.12) 0%, transparent 50%),
+      linear-gradient(135deg, #0B0B0F 0%, #2D1B69 50%, #1A1A2E 100%);
+  }
+  66% {
+    background: 
+      radial-gradient(ellipse at 40% 80%, rgba(0, 212, 170, 0.18) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 40%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 60%, rgba(239, 68, 68, 0.08) 0%, transparent 50%),
+      linear-gradient(135deg, #16213E 0%, #0B0B0F 50%, #1E1E2E 100%);
+  }
+}
+
+/* Particules flottantes */
+.floating-particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float 15s ease-in-out infinite;
+  opacity: 0.4;
+  filter: blur(1px);
+}
+
+/* Différents types de particules */
+.particle-1 {
+  width: 4px;
+  height: 4px;
+  background: linear-gradient(45deg, #00D4AA, #00E4BB);
+  animation-duration: 20s;
+  animation-delay: 0s;
+}
+
+.particle-2 {
+  width: 6px;
+  height: 6px;
+  background: linear-gradient(45deg, #7C3AED, #9333EA);
+  animation-duration: 25s;
+  animation-delay: -5s;
+}
+
+.particle-3 {
+  width: 3px;
+  height: 3px;
+  background: linear-gradient(45deg, #EF4444, #F87171);
+  animation-duration: 18s;
+  animation-delay: -10s;
+}
+
+.particle-4 {
+  width: 5px;
+  height: 5px;
+  background: linear-gradient(45deg, #F59E0B, #FCD34D);
+  animation-duration: 22s;
+  animation-delay: -15s;
+}
+
+/* Animation de flottement */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) rotate(90deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-40px) translateX(-5px) rotate(180deg);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translateY(-20px) translateX(-10px) rotate(270deg);
+    opacity: 0.8;
+  }
+}
+
+/* Effet d'onde au survol */
+.wave-effect {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 212, 170, 0.3) 0%, transparent 70%);
+  pointer-events: none;
+  transform: scale(0);
+  animation: waveRipple 1.5s ease-out;
+  z-index: 1;
+}
+
+@keyframes waveRipple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Lignes de connexion animées */
+.connection-lines {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.1;
+}
+
+.connection-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #00D4AA, transparent);
+  animation: lineFlow 8s linear infinite;
+}
+
+@keyframes lineFlow {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100vw);
+    opacity: 0;
+  }
+}
+
+/* Orbes lumineux */
+.glowing-orbs {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(20px);
+  animation: orbFloat 12s ease-in-out infinite;
+  opacity: 0.3;
+}
+
+.orb-1 {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(0, 212, 170, 0.4), transparent);
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.4), transparent);
+  top: 60%;
+  right: 15%;
+  animation-delay: -4s;
+}
+
+.orb-3 {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.3), transparent);
+  bottom: 20%;
+  left: 20%;
+  animation-delay: -8s;
+}
+
+@keyframes orbFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+    opacity: 0.5;
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+    opacity: 0.4;
+  }
+}
+
+/* Effet de parallaxe */
+.parallax-layer {
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, rgba(0, 212, 170, 0.3), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(124, 58, 237, 0.3), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(239, 68, 68, 0.3), transparent);
+  background-repeat: repeat;
+  animation: parallaxMove 30s linear infinite;
+  opacity: 0.2;
+}
+
+@keyframes parallaxMove {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-50px, -50px);
+  }
+}
+
+/* Mesh gradient animé */
+.mesh-gradient {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse at top left, transparent 40%, rgba(0, 212, 170, 0.05) 70%),
+    radial-gradient(ellipse at top right, transparent 40%, rgba(124, 58, 237, 0.05) 70%),
+    radial-gradient(ellipse at bottom left, transparent 40%, rgba(239, 68, 68, 0.03) 70%),
+    radial-gradient(ellipse at bottom right, transparent 40%, rgba(245, 158, 11, 0.03) 70%);
+  animation: meshShift 25s ease-in-out infinite;
+  mix-blend-mode: overlay;
+}
+
+@keyframes meshShift {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+  }
+}
+
+/* =================================== */
+/* EFFETS INTERACTIFS AU SURVOL */
+/* =================================== */
+
+/* Container pour capturer les événements de souris */
+.interactive-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  cursor: none;
+}
+
+/* Curseur personnalisé */
+.custom-cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, rgba(0, 212, 170, 0.6), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: transform 0.1s ease;
+}
+
+.custom-cursor.active {
+  transform: scale(2);
+  background: radial-gradient(circle, rgba(0, 212, 170, 0.8), rgba(124, 58, 237, 0.4), transparent);
+}
+
+/* Effet de traînée */
+.cursor-trail {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: rgba(0, 212, 170, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  animation: trailFade 0.5s ease-out forwards;
+}
+
+@keyframes trailFade {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+/* Amélioration des cards avec l'arrière-plan */
+.card {
+  background: rgba(26, 26, 46, 0.7);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(55, 65, 81, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 170, 0.8), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.card:hover::before {
+  transform: translateX(100%);
+}
+
+/* Effet de lueur au survol */
+.card:hover {
+  box-shadow: 
+    0 0 30px rgba(0, 212, 170, 0.3),
+    0 0 60px rgba(0, 212, 170, 0.1),
+    inset 0 0 20px rgba(0, 212, 170, 0.05);
+  transform: translateY(-5px);
+}
+
+/* Animation d'apparition en cascade */
+.cascade-animation {
+  animation: cascadeIn 0.8s ease-out forwards;
+}
+
+@keyframes cascadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Délais pour l'effet cascade */
+.cascade-animation:nth-child(1) { animation-delay: 0.1s; }
+.cascade-animation:nth-child(2) { animation-delay: 0.2s; }
+.cascade-animation:nth-child(3) { animation-delay: 0.3s; }
+.cascade-animation:nth-child(4) { animation-delay: 0.4s; }
+.cascade-animation:nth-child(5) { animation-delay: 0.5s; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .floating-particles {
+    display: none; /* Désactiver sur mobile pour les performances */
+  }
+  
+  .orb {
+    filter: blur(10px);
+  }
+  
+  .parallax-layer {
+    animation-duration: 60s; /* Ralentir sur mobile */
+  }
+}
+
+/* ================================= */
+/* ANIMATIONS SUPPLÉMENTAIRES */
+/* ================================= */
+
+/* Animation de rotation pour le loading */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Animation de pulsation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+/* Animation de rebond pour les dots de loading */
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+/* Animation de glow pulsé */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 5px rgba(0, 212, 170, 0.5),
+      0 0 10px rgba(0, 212, 170, 0.3),
+      0 0 15px rgba(0, 212, 170, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 0 10px rgba(0, 212, 170, 0.8),
+      0 0 20px rgba(0, 212, 170, 0.5),
+      0 0 30px rgba(0, 212, 170, 0.3);
+  }
+}
+
+/* Animation de shake pour les erreurs */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Animation de zoom-in pour les modales */
+@keyframes modalZoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Animation de slide-in pour les notifications */
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animation de typing pour les textes */
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* Animation de blink pour le curseur */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* ================================= */
+/* ANIMATIONS DES ÉLÉMENTS UI */
+/* ================================= */
+
+/* Animation des boutons au survol */
+.button-hover-effect {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.button-hover-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.button-hover-effect:hover::before {
+  left: 100%;
+}
+
+/* Animation des cards au chargement */
+.card-enter {
+  animation: cardSlideUp 0.6s ease-out forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes cardSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Animation des prix qui changent */
+.price-change-up {
+  animation: priceUp 1s ease-out;
+}
+
+.price-change-down {
+  animation: priceDown 1s ease-out;
+}
+
+@keyframes priceUp {
+  0% { color: inherit; transform: scale(1); }
+  50% { color: #10B981; transform: scale(1.1); }
+  100% { color: #10B981; transform: scale(1); }
+}
+
+@keyframes priceDown {
+  0% { color: inherit; transform: scale(1); }
+  50% { color: #EF4444; transform: scale(1.1); }
+  100% { color: #EF4444; transform: scale(1); }
+}
+
+/* Animation des graphiques */
+.chart-line-draw {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 2s ease-out forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Animation de typing pour les textes d'introduction */
+.typing-text {
+  overflow: hidden;
+  border-right: 2px solid #00D4AA;
+  white-space: nowrap;
+  margin: 0 auto;
+  animation: 
+    typing 3.5s steps(40, end),
+    blink 0.75s step-end infinite;
+}
+
+/* Animation des particules de succès */
+.success-particles {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.success-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #10B981;
+  border-radius: 50%;
+  animation: successFloat 2s ease-out forwards;
+}
+
+@keyframes successFloat {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) translateY(-100px);
+  }
+}
+
+/* Animation de progress bar */
+.progress-bar {
+  position: relative;
+  background: rgba(55, 65, 81, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00D4AA, #7C3AED);
+  border-radius: 10px;
+  transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ================================= */
+/* MICRO-ANIMATIONS */
+/* ================================= */
+
+/* Animation des icônes au survol */
+.icon-hover {
+  transition: all 0.3s ease;
+}
+
+.icon-hover:hover {
+  transform: scale(1.2) rotate(5deg);
+  filter: drop-shadow(0 0 10px rgba(0, 212, 170, 0.5));
+}
+
+/* Animation des badges */
+.badge-pulse {
+  animation: badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+/* Animation des liens */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00D4AA, #7C3AED);
+  transition: width 0.3s ease;
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Animation des tooltips */
+.tooltip-fade-in {
+  animation: tooltipFadeIn 0.3s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Animation des steppers */
+.stepper-active {
+  animation: stepperGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes stepperGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(0, 212, 170, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 212, 170, 0.8);
+  }
+}
+
+/* ================================= */
+/* ANIMATIONS RESPONSIVE */
+/* ================================= */
+
+/* Réduire les animations sur mobile pour les performances */
+@media (max-width: 768px) {
+  .animated-background {
+    animation-duration: 40s; /* Plus lent sur mobile */
+  }
+  
+  .particle {
+    animation-duration: 25s; /* Plus lent sur mobile */
+  }
+  
+  .orb {
+    animation-duration: 20s; /* Plus lent sur mobile */
+  }
+}
+
+/* Désactiver les animations si l'utilisateur préfère */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .animated-background,
+  .floating-particles,
+  .glowing-orbs,
+  .connection-lines,
+  .parallax-layer {
+    animation: none !important;
+  }
+}
+
+/* ================================= */
+/* MASQUER LE CURSEUR PARTOUT */
+/* ================================= */
+
+/* Masquer le curseur par défaut sur toute l'application */
+body, 
+.app,
+* {
+  cursor: none !important;
+}
+
+/* Forcer le masquage du curseur sur tous les éléments interactifs */
+button,
+a,
+input,
+select,
+textarea,
+[role="button"],
+[tabindex],
+.clickable,
+.price-row,
+.crypto-card,
+.timeframe-btn,
+.sell-btn,
+.invite-btn,
+.close-btn,
+.view-btn,
+.clear-search,
+.trade-type-btn {
+  cursor: none !important;
+}
+
+/* Masquer aussi sur les états hover et focus */
+button:hover,
+a:hover,
+input:hover,
+select:hover,
+.price-row:hover,
+.crypto-card:hover,
+*:hover {
+  cursor: none !important;
+}
+
+/* ================================= */
+/* CURSEUR PERSONNALISÉ */
+/* ================================= */
+
+.custom-cursor {
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, 
+    rgba(0, 212, 170, 1) 0%, 
+    rgba(0, 228, 187, 0.8) 30%, 
+    rgba(0, 245, 204, 0.4) 60%, 
+    transparent 100%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transition: all 0.06s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 
+    0 0 8px rgba(0, 212, 170, 0.8),
+    0 0 16px rgba(0, 228, 187, 0.5),
+    inset 0 0 6px rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* État actif (survol d'éléments cliquables) */
+.custom-cursor.active {
+  width: 24px;
+  height: 24px;
+  background: radial-gradient(circle, 
+    rgba(0, 212, 170, 1) 0%, 
+    rgba(124, 58, 237, 0.8) 40%, 
+    rgba(0, 245, 204, 0.5) 70%, 
+    transparent 100%
+  );
+  box-shadow: 
+    0 0 12px rgba(0, 212, 170, 1),
+    0 0 24px rgba(124, 58, 237, 0.7),
+    inset 0 0 8px rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+/* État de clic */
+.custom-cursor.clicking {
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle, 
+    rgba(255, 255, 255, 1) 0%, 
+    rgba(0, 212, 170, 1) 30%, 
+    rgba(124, 58, 237, 0.8) 60%, 
+    transparent 100%
+  );
+  box-shadow: 
+    0 0 16px rgba(0, 212, 170, 1),
+    0 0 32px rgba(124, 58, 237, 0.8),
+    inset 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+/* Mode texte (pour les inputs) */
+.custom-cursor.text-mode {
+  width: 2px;
+  height: 20px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, 
+    rgba(0, 212, 170, 1) 0%, 
+    rgba(0, 228, 187, 0.8) 50%, 
+    rgba(0, 245, 204, 0.6) 100%
+  );
+  box-shadow: 
+    0 0 6px rgba(0, 212, 170, 0.9),
+    0 0 12px rgba(0, 228, 187, 0.6);
+  animation: textCursorBlink 1.2s ease-in-out infinite;
+}
+
+@keyframes textCursorBlink {
+  0%, 50% { 
+    opacity: 1; 
+    box-shadow: 
+      0 0 6px rgba(0, 212, 170, 0.9),
+      0 0 12px rgba(0, 228, 187, 0.6);
+  }
+  51%, 100% { 
+    opacity: 0.4; 
+    box-shadow: 
+      0 0 3px rgba(0, 212, 170, 0.5),
+      0 0 6px rgba(0, 228, 187, 0.3);
+  }
+}
+
+/* ================================= */
+/* TRAÎNÉE LIGNE FLUIDE */
+/* ================================= */
+
+/* Container pour la traînée SVG */
+.cursor-trail-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 99998;
+}
+
+/* SVG pour la traînée */
+.cursor-trail-svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Ligne de traînée principale */
+.trail-line {
+  fill: none;
+  stroke: url(#trailGradient);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 4px rgba(0, 212, 170, 0.5));
+}
+
+/* Ligne de traînée secondaire (plus fine) */
+.trail-line-secondary {
+  fill: none;
+  stroke: url(#trailGradientSecondary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.6;
+  filter: drop-shadow(0 0 2px rgba(0, 228, 187, 0.4));
+}
+
+/* Ligne de traînée pour mode interactif */
+.trail-line-interactive {
+  fill: none;
+  stroke: url(#trailGradientInteractive);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.6));
+  animation: trailPulse 0.3s ease-out;
+}
+
+@keyframes trailPulse {
+  0% { stroke-width: 4; opacity: 0.9; }
+  50% { stroke-width: 6; opacity: 1; }
+  100% { stroke-width: 4; opacity: 0.9; }
+}
+
+/* ================================= */
+/* OPTIMISATIONS PERFORMANCE */
+/* ================================= */
+
+/* Optimiser les animations pour plus de fluidité */
+.custom-cursor,
+.cursor-trail-container {
+  /* Force l'accélération GPU */
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Sur mobile, désactiver complètement */
+@media (max-width: 768px) {
+  .custom-cursor,
+  .cursor-trail-container {
+    display: none !important;
+  }
+  
+  body,
+  .app,
+  * {
+    cursor: auto !important;
+  }
+}
+
+/* Pour les appareils tactiles */
+@media (hover: none) and (pointer: coarse) {
+  .custom-cursor,
+  .cursor-trail-container {
+    display: none !important;
+  }
+  
+  body,
+  .app,
+  * {
+    cursor: auto !important;
+  }
+}

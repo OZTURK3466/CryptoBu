@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const { authenticateToken, optionalAuth } = require('./middleware/auth');
 require('dotenv').config();
 
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -27,6 +28,9 @@ app.use(cookieParser());
 
 // Routes d'authentification
 app.use('/api/auth', authRoutes);
+
+const adminRoutes = require('./routes/admin');
+app.use('/api/admin', adminRoutes);
 
 // WebSocket server pour les prix en temps réel
 const wss = new WebSocket.Server({ port: 8080 });

@@ -210,6 +210,7 @@ echo -e "${CYAN}═════════════════════�
 
 echo -e "${BLUE}📊 Backend API:${NC}     http://localhost:3001"
 echo -e "${GREEN}🌐 Frontend Web:${NC}    http://localhost:3000" 
+echo -e "${PURPLE}⚙️  Admin Panel:${NC}     http://localhost:3001/api/admin"
 echo -e "${YELLOW}🤖 Bot Discord:${NC}     Connecté (vérifiez Discord)"
 echo -e "${PURPLE}🔌 WebSocket:${NC}       ws://localhost:8080"
 
@@ -224,6 +225,7 @@ echo -e "Vérifier les ports: ${PURPLE}lsof -i :3000 -i :3001 -i :8080${NC}"
 echo -e "Arrêter tout:       ${RED}Ctrl+C${NC}"
 
 echo -e "\n${GREEN}🎉 La plateforme est prête ! Rendez-vous sur http://localhost:3000${NC}"
+echo -e "${PURPLE}🔐 Panel Admin accessible sur http://localhost:3001/api/admin${NC}"
 
 echo -e "\n${RED}💡 Appuyez sur Ctrl+C pour arrêter tous les services${NC}"
 echo -e "${CYAN}⏳ En attente...${NC}\n"

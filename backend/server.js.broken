@@ -1,0 +1,168 @@
+const express = require('express');
+const cors = require('cors');
+const axios = require('axios');
+const { Pool } = require('pg');
+const WebSocket = require('ws');
+const cookieParser = require('cookie-parser');
+const authRoutes = require('./routes/auth');
+const { authenticateToken, optionalAuth } = require('./middleware/auth');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Configuration PostgreSQL
+const pool = new Pool({
+  user: process.env.DB_USER || 'crypto_user',
+  host: process.env.DB_HOST || 'localhost',
+  database: process.env.DB_NAME || 'crypto_trading',
+  password: process.env.DB_PASSWORD || 'crypto_password',
+  port: process.env.DB_PORT || 5432,
+});
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(cookieParser());
+
+// Routes d'authentification
+app.use('/api/auth', authRoutes);
+
+// WebSocket server pour les prix en temps réel
+const wss = new WebSocket.Server({ port: 8080 });
+
+// Stockage des prix en cache
+let priceCache = new Map();
+let clients = new Set();
+
+// Gestion des connexions WebSocket
+wss.on('connection', (ws) => {
+  clients.add(ws);
+  console.log('Client connecté au WebSocket');
+  
+  // Envoyer les prix actuels au nouveau client
+  ws.send(JSON.stringify({
+    type: 'price_update',
+    data: Object.fromEntries(priceCache)
+  }));
+  
+  ws.on('close', () => {
+    clients.delete(ws);
+    console.log('Client déconnecté du WebSocket');
+  });
+});
+
+// Fonction pour diffuser les prix à tous les clients
+function broadcastPrices(prices) {
+  const message = JSON.stringify({
+    type: 'price_update',
+    data: prices,
+    timestamp: new Date().toISOString()
+  });
+  
+  clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+}
+
+// Récupération des prix crypto depuis CoinGecko
+async function fetchCryptoPrices() {
+  try {
+    const response = await axios.get('https://api.coingecko.com/api/v3/simple/price', {
+      params: {
+        ids: 'bitcoin,ethereum,cardano,polkadot,chainlink,litecoin,bitcoin-cash,stellar,dogecoin,polygon',
+        vs_currencies: 'usd,eur',
+        include_24hr_change: 'true',
+        include_last_updated_at: 'true'
+      }
+    });
+    
+    const prices = response.data;
+    
+    // Mettre à jour le cache
+    Object.keys(prices).forEach(coin => {
+      priceCache.set(coin, prices[coin]);
+    });
+    
+    // Diffuser aux clients WebSocket
+    broadcastPrices(prices);
+    
+    return prices;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des prix:', error.message);
+    return null;
+  }
+}
+
+// Récupération des données historiques
+async function fetchHistoricalData(coinId, days = 7) {
+  try {
+    const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart`, {
+      params: {
+        vs_currency: 'usd',
+        days: days,
+        interval: days <= 1 ? 'hourly' : 'daily'
+      }
+    });
+    
+    return {
+      prices: response.data.prices,
+      volumes: response.data.total_volumes,
+      market_caps: response.data.market_caps
+    };
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données historiques:', error.message);
+    return null;
+  }
+}
+
+// Routes API
+
+// Route pour obtenir les prix actuels (publique)
+app.get('/api/prices', async (req, res) => {
+  try {
+    const prices = await fetchCryptoPrices();
+    if (prices) {
+      res.json(prices);
+    } else {
+      res.status(500).json({ error: 'Impossible de récupérer les prix' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Route pour obtenir les données historiques (publique)
+app.get('/api/history/:coinId', async (req, res) => {
+  try {
+    const { coinId } = req.params;
+    const { days = 7 } = req.query;
+    
+    const data = await fetchHistoricalData(coinId, parseInt(days));
+    if (data) {
+      res.json(data);
+    } else {
+      res.status(500).json({ error: 'Impossible de récupérer les données historiques' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Démarrage du serveur
+app.listen(PORT, () => {
+  console.log('🚀 Serveur backend démarré sur le port', PORT);
+  console.log('📊 API disponible sur http://localhost:' + PORT + '/api');
+  console.log('🔌 WebSocket server démarré sur le port 8080');
+  
+  // Test de connexion à la base de données
+  pool.query('SELECT NOW()', (err, result) => {
+    if (err) {
+      console.error('❌ Erreur de connexion à la base de données:', err.message);
+    } else {
+      console.log('✅ Connexion à la base de données réussie');
+    }
+  });
+});

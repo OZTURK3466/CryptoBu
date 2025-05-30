@@ -63,7 +63,7 @@ const AnimatedBackground = () => {
       trailContainer.className = 'cursor-trail-container';
       
       trailSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      trailSvg.className = 'cursor-trail-svg';
+      trailSvg.setAttribute('class', 'cursor-trail-svg');
       
       // Créer les dégradés
       const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
@@ -104,10 +104,10 @@ const AnimatedBackground = () => {
       
       // Créer les chemins
       trailPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      trailPath.className = 'trail-line';
+      trailPath.setAttribute('class', 'trail-line');
       
       trailPathSecondary = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      trailPathSecondary.className = 'trail-line-secondary';
+      trailPathSecondary.setAttribute('class', 'trail-line-secondary');
       
       trailSvg.appendChild(trailPathSecondary);
       trailSvg.appendChild(trailPath);
@@ -141,7 +141,7 @@ const AnimatedBackground = () => {
       
       if (trailPath) {
         trailPath.setAttribute('d', pathData);
-        trailPath.className = isClickable ? 'trail-line-interactive' : 'trail-line';
+        trailPath.setAttribute('class', isClickable ? 'trail-line-interactive' : 'trail-line');
       }
       
       if (trailPathSecondary) {

@@ -41,21 +41,14 @@ wss.on('connection', (ws) => {
   console.log('Client connecté au WebSocket');
   
   // Envoyer les prix actuels au nouveau client
-  if (priceCache.size > 0) {
-    ws.send(JSON.stringify({
-      type: 'price_update',
-      data: Object.fromEntries(priceCache)
-    }));
-  }
+  ws.send(JSON.stringify({
+    type: 'price_update',
+    data: Object.fromEntries(priceCache)
+  }));
   
   ws.on('close', () => {
     clients.delete(ws);
     console.log('Client déconnecté du WebSocket');
-  });
-  
-  ws.on('error', (error) => {
-    console.error('Erreur WebSocket:', error);
-    clients.delete(ws);
   });
 });
 
@@ -69,12 +62,7 @@ function broadcastPrices(prices) {
   
   clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
-      try {
-        client.send(message);
-      } catch (error) {
-        console.error('Erreur envoi WebSocket:', error);
-        clients.delete(client);
-      }
+      client.send(message);
     }
   });
 }
@@ -130,9 +118,9 @@ async function fetchHistoricalData(coinId, days = 7) {
   }
 }
 
-// Routes API publiques
+// Routes API
 
-// Route pour obtenir les prix actuels
+// Route pour obtenir les prix actuels (publique)
 app.get('/api/prices', async (req, res) => {
   try {
     const prices = await fetchCryptoPrices();
@@ -146,7 +134,7 @@ app.get('/api/prices', async (req, res) => {
   }
 });
 
-// Route pour obtenir les données historiques
+// Route pour obtenir les données historiques (publique)
 app.get('/api/history/:coinId', async (req, res) => {
   try {
     const { coinId } = req.params;
@@ -164,6 +152,19 @@ app.get('/api/history/:coinId', async (req, res) => {
 });
 
 // Routes protégées par authentification
+
+// Obtenir les informations de l'utilisateur connecté
+app.get('/api/users/me', authenticateToken, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT id, username, email, balance, created_at FROM users WHERE id = $1', [req.user.id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Obtenir le portefeuille de l'utilisateur connecté
 app.get('/api/portfolio', authenticateToken, async (req, res) => {
@@ -189,17 +190,12 @@ app.get('/api/portfolio', authenticateToken, async (req, res) => {
       }
     }
     
-    // Récupérer le solde cash
-    const userResult = await pool.query('SELECT balance FROM users WHERE id = $1', [req.user.id]);
-    const cashBalance = userResult.rows.length > 0 ? parseFloat(userResult.rows[0].balance) : 0;
-    
     res.json({
       holdings: portfolio,
       total_crypto_value: totalValue,
-      cash_balance: cashBalance
+      cash_balance: portfolio.length > 0 ? portfolio[0].balance : 0
     });
   } catch (error) {
-    console.error('Erreur portfolio:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -209,8 +205,6 @@ app.post('/api/buy', authenticateToken, async (req, res) => {
   try {
     const { crypto_id, amount_usd } = req.body;
     const userId = req.user.id;
-    
-    console.log(`Achat: ${crypto_id}, ${amount_usd} USD, User: ${userId}`);
     
     // Vérifier le solde de l'utilisateur
     const userResult = await pool.query('SELECT balance FROM users WHERE id = $1', [userId]);
@@ -281,7 +275,6 @@ app.post('/api/buy', authenticateToken, async (req, res) => {
       client.release();
     }
   } catch (error) {
-    console.error('Erreur achat:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -291,8 +284,6 @@ app.post('/api/sell', authenticateToken, async (req, res) => {
   try {
     const { crypto_id, quantity } = req.body;
     const userId = req.user.id;
-    
-    console.log(`Vente: ${crypto_id}, ${quantity}, User: ${userId}`);
     
     // Vérifier la position de l'utilisateur
     const portfolioResult = await pool.query(
@@ -330,7 +321,7 @@ app.post('/api/sell', authenticateToken, async (req, res) => {
       
       // Mettre à jour ou supprimer la position
       const newQuantity = parseFloat(holding.quantity) - quantity;
-      if (newQuantity > 0.00001) {
+      if (newQuantity > 0.00001) { // Garder une petite marge pour les erreurs de floating point
         await client.query(
           'UPDATE portfolio SET quantity = $1 WHERE user_id = $2 AND crypto_id = $3',
           [newQuantity, userId, crypto_id]
@@ -357,30 +348,91 @@ app.post('/api/sell', authenticateToken, async (req, res) => {
       client.release();
     }
   } catch (error) {
-    console.error('Erreur vente:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// Route de santé
+// Obtenir l'historique des transactions de l'utilisateur connecté
+app.get('/api/transactions', authenticateToken, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM transactions WHERE user_id = $1 ORDER BY created_at DESC LIMIT 50',
+      [req.user.id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Route de santé de l'API
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    websocket_connections: clients.size,
-    price_cache_size: priceCache.size
+    services: {
+      database: 'connected',
+      websocket: 'active',
+      api: 'running'
+    }
   });
+});
+
+// Route pour obtenir des statistiques (optionnelle, pour admin)
+app.get('/api/stats', optionalAuth, async (req, res) => {
+  try {
+    const [usersResult, transactionsResult, portfolioResult] = await Promise.all([
+      pool.query('SELECT COUNT(*) as total_users FROM users'),
+      pool.query('SELECT COUNT(*) as total_transactions, SUM(total_amount) as total_volume FROM transactions'),
+      pool.query('SELECT COUNT(DISTINCT user_id) as active_traders FROM portfolio')
+    ]);
+
+    res.json({
+      total_users: parseInt(usersResult.rows[0].total_users),
+      total_transactions: parseInt(transactionsResult.rows[0].total_transactions),
+      total_volume: parseFloat(transactionsResult.rows[0].total_volume || 0),
+      active_traders: parseInt(portfolioResult.rows[0].active_traders),
+      tracked_cryptos: priceCache.size,
+      websocket_connections: clients.size
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Gestion des erreurs globales
 app.use((err, req, res, next) => {
   console.error('Erreur serveur:', err);
+
+  // Erreurs JWT
+  if (err.name === 'JsonWebTokenError') {
+    return res.status(401).json({ error: 'Token invalide' });
+  }
+  
+  if (err.name === 'TokenExpiredError') {
+    return res.status(401).json({ error: 'Token expiré' });
+  }
+
+  // Erreurs de validation
+  if (err.name === 'ValidationError') {
+    return res.status(400).json({ error: err.message });
+  }
+
+  // Erreurs PostgreSQL
+  if (err.code === '23505') {
+    return res.status(400).json({ error: 'Cette donnée existe déjà' });
+  }
+
+  if (err.code === '23503') {
+    return res.status(400).json({ error: 'Référence invalide' });
+  }
+
+  // Erreur générique
   res.status(500).json({ error: 'Erreur serveur interne' });
 });
 
-// Route 404
+// Route 404 pour les endpoints non trouvés
 app.use('*', (req, res) => {
-  console.log('Route non trouvée:', req.method, req.originalUrl);
   res.status(404).json({ 
     error: 'Endpoint non trouvé',
     path: req.originalUrl,
@@ -388,14 +440,18 @@ app.use('*', (req, res) => {
   });
 });
 
-// Démarrage des services
-setInterval(fetchCryptoPrices, 120000); // 2 minutes
-fetchCryptoPrices(); // Premier fetch
+// Mettre à jour les prix toutes les 2 minutes
+setInterval(fetchCryptoPrices, 120000);
 
+// Récupérer les prix au démarrage
+fetchCryptoPrices();
+
+// Démarrage du serveur
 app.listen(PORT, () => {
   console.log(`🚀 Serveur backend démarré sur le port ${PORT}`);
   console.log(`📊 API disponible sur http://localhost:${PORT}/api`);
   console.log(`🔌 WebSocket server démarré sur le port 8080`);
+  console.log(`💡 Health check: http://localhost:${PORT}/api/health`);
   
   // Test de connexion à la base de données
   pool.query('SELECT NOW()', (err, result) => {

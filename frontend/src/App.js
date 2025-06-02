@@ -553,7 +553,7 @@ function App() {
       <AnimatedBackground />
 
       <header className="app-header cascade-animation">
-        <h1>🚀 Crypto Trading Simulator</h1>
+        <h1>🚀 Cryptobu</h1>
         <div className="user-info">
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
             <div style={{

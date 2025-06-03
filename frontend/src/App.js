@@ -6,7 +6,6 @@ import PriceList from './components/PriceList';
 import DiscordInvite from './components/DiscordInvite';
 import CryptoSelector from './components/CryptoSelector';
 import AnimatedBackground from './components/AnimatedBackground';
-import ChatBot from './components/ChatBot'; // Nouveau composant
 import Login from './components/Login';
 import Register from './components/Register';
 import authService from './services/authService';
@@ -673,16 +672,6 @@ function App() {
           </div>
         </div>
       </div>
-
-      {/* ChatBot - Nouveau composant ajouté */}
-      <ChatBot 
-        user={user}
-        selectedCrypto={selectedCrypto}
-        currentPrice={prices[selectedCrypto]?.usd}
-        portfolio={portfolio}
-        prices={prices}
-        cryptoNames={cryptoNames}
-      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { formatPrice, getPriceValue, getSymbolForCurrency, formatLargeNumber } from '../utils/currencyUtils';
 
-const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
+const Portfolio = ({ portfolio, prices, cryptoNames, onTrade, currency = 'usd' }) => {
   const [showSellModal, setShowSellModal] = useState(false);
   const [selectedHolding, setSelectedHolding] = useState(null);
   const [sellQuantity, setSellQuantity] = useState('');
@@ -77,8 +78,16 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
     return colors[cryptoId] || 'linear-gradient(135deg, #00D4AA 0%, #00E4BB 100%)';
   };
 
-  const totalCryptoValue = Number(safePortfolio.total_crypto_value) || 0;
-  const cashBalance = Number(safePortfolio.cash_balance) || 0;
+  // Convertir les valeurs selon la devise sélectionnée
+  const convertValue = (usdValue) => {
+    if (currency === 'eur') {
+      return usdValue * 0.92; // Conversion approximative USD -> EUR
+    }
+    return usdValue;
+  };
+
+  const totalCryptoValue = convertValue(Number(safePortfolio.total_crypto_value) || 0);
+  const cashBalance = convertValue(Number(safePortfolio.cash_balance) || 0);
   const totalPortfolioValue = totalCryptoValue + cashBalance;
 
   // Calculer les statistiques du portfolio
@@ -97,9 +106,9 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
     let worstPL = Infinity;
     
     safePortfolio.holdings.forEach(holding => {
-      const currentPrice = Number(safePrices[holding.crypto_id]?.usd) || 0;
+      const currentPrice = getPriceValue(safePrices[holding.crypto_id], currency);
       const quantity = Number(holding.quantity) || 0;
-      const avgBuyPrice = Number(holding.avg_buy_price) || 0;
+      const avgBuyPrice = convertValue(Number(holding.avg_buy_price) || 0);
       const currentValue = quantity * currentPrice;
       const costBasis = quantity * avgBuyPrice;
       const profitLoss = currentValue - costBasis;
@@ -121,16 +130,26 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
 
   return (
     <div className="portfolio">
-      <h3>Mon Portefeuille</h3>
+      <h3>
+        Mon Portefeuille
+        <span style={{ 
+          fontSize: '0.875rem', 
+          fontWeight: '500', 
+          color: '#9CA3AF',
+          marginLeft: '0.5rem'
+        }}>
+          ({currency.toUpperCase()})
+        </span>
+      </h3>
       
       <div className="portfolio-summary">
         <div className="summary-row">
           <span>💰 Cryptomonnaies</span>
-          <span className="value">${totalCryptoValue.toFixed(2)}</span>
+          <span className="value">{formatPrice(totalCryptoValue, currency)}</span>
         </div>
         <div className="summary-row">
           <span>💵 Liquidités</span>
-          <span className="value">${cashBalance.toFixed(2)}</span>
+          <span className="value">{formatPrice(cashBalance, currency)}</span>
         </div>
         <div className="summary-row">
           <span>📊 P&L Total</span>
@@ -140,13 +159,39 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
               color: portfolioStats.totalProfitLoss >= 0 ? '#34D399' : '#F87171' 
             }}
           >
-            {portfolioStats.totalProfitLoss >= 0 ? '+' : ''}${portfolioStats.totalProfitLoss.toFixed(2)}
+            {portfolioStats.totalProfitLoss >= 0 ? '+' : ''}{formatPrice(portfolioStats.totalProfitLoss, currency)}
           </span>
         </div>
         <div className="summary-row total">
           <span>🏆 Valeur Totale</span>
-          <span className="value">${totalPortfolioValue.toFixed(2)}</span>
+          <span className="value">{formatPrice(totalPortfolioValue, currency)}</span>
         </div>
+        
+        {/* Affichage dans l'autre devise */}
+        {currency === 'eur' && (
+          <div className="summary-row" style={{ 
+            fontSize: '0.875rem', 
+            color: '#9CA3AF',
+            borderTop: '1px solid rgba(55, 65, 81, 0.3)',
+            paddingTop: '0.75rem',
+            marginTop: '0.75rem'
+          }}>
+            <span>≈ Équivalent USD</span>
+            <span>${(totalPortfolioValue / 0.92).toFixed(2)}</span>
+          </div>
+        )}
+        {currency === 'usd' && (
+          <div className="summary-row" style={{ 
+            fontSize: '0.875rem', 
+            color: '#9CA3AF',
+            borderTop: '1px solid rgba(55, 65, 81, 0.3)',
+            paddingTop: '0.75rem',
+            marginTop: '0.75rem'
+          }}>
+            <span>≈ Équivalent EUR</span>
+            <span>€{(totalPortfolioValue * 0.92).toFixed(2)}</span>
+          </div>
+        )}
       </div>
 
       {/* Statistiques Portfolio */}
@@ -199,9 +244,9 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
           safePortfolio.holdings.map((holding, index) => {
             if (!holding || !holding.crypto_id) return null;
             
-            const currentPrice = Number(safePrices[holding.crypto_id]?.usd) || 0;
+            const currentPrice = getPriceValue(safePrices[holding.crypto_id], currency);
             const quantity = Number(holding.quantity) || 0;
-            const avgBuyPrice = Number(holding.avg_buy_price) || 0;
+            const avgBuyPrice = convertValue(Number(holding.avg_buy_price) || 0);
             const currentValue = quantity * currentPrice;
             const costBasis = quantity * avgBuyPrice;
             const profitLoss = currentValue - costBasis;
@@ -260,24 +305,24 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
                   </div>
                   <div className="detail-row">
                     <span>💵 Prix d'achat</span>
-                    <span>${avgBuyPrice.toFixed(2)}</span>
+                    <span>{formatPrice(avgBuyPrice, currency)}</span>
                   </div>
                   <div className="detail-row">
                     <span>📈 Prix actuel</span>
-                    <span>${currentPrice.toFixed(2)}</span>
+                    <span>{formatPrice(currentPrice, currency)}</span>
                   </div>
                   <div className="detail-row">
                     <span>💰 Valeur actuelle</span>
-                    <span>${currentValue.toFixed(2)}</span>
+                    <span>{formatPrice(currentValue, currency)}</span>
                   </div>
                   <div className="detail-row">
                     <span>📊 Coût d'acquisition</span>
-                    <span>${costBasis.toFixed(2)}</span>
+                    <span>{formatPrice(costBasis, currency)}</span>
                   </div>
                   <div className={`detail-row profit-loss ${isProfit ? 'profit' : 'loss'}`}>
                     <span>🎯 P&L</span>
                     <span>
-                      {isProfit ? '+' : ''}${profitLoss.toFixed(2)}
+                      {isProfit ? '+' : ''}{formatPrice(profitLoss, currency)}
                       <br />
                       <small style={{ fontSize: '0.75rem' }}>
                         ({isProfit ? '+' : ''}{profitLossPercentage.toFixed(2)}%)
@@ -359,7 +404,7 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
                       {safeCryptoNames[selectedHolding.crypto_id] || selectedHolding.crypto_id}
                     </h3>
                     <p style={{ margin: 0, color: '#9CA3AF', fontSize: '0.875rem' }}>
-                      Position actuelle
+                      Position actuelle ({currency.toUpperCase()})
                     </p>
                   </div>
                 </div>
@@ -378,7 +423,7 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
                       Prix actuel:
                     </p>
                     <p style={{ margin: 0, fontFamily: 'JetBrains Mono, monospace', fontWeight: '600', color: '#00D4AA' }}>
-                      ${(Number(safePrices[selectedHolding.crypto_id]?.usd) || 0).toFixed(2)}
+                      {formatPrice(getPriceValue(safePrices[selectedHolding.crypto_id], currency), currency)}
                     </p>
                   </div>
                   <div>
@@ -386,7 +431,10 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
                       Valeur totale:
                     </p>
                     <p style={{ margin: 0, fontFamily: 'JetBrains Mono, monospace', fontWeight: '600' }}>
-                      ${((Number(selectedHolding.quantity) || 0) * (Number(safePrices[selectedHolding.crypto_id]?.usd) || 0)).toFixed(2)}
+                      {formatPrice(
+                        (Number(selectedHolding.quantity) || 0) * getPriceValue(safePrices[selectedHolding.crypto_id], currency),
+                        currency
+                      )}
                     </p>
                   </div>
                   <div>
@@ -394,7 +442,7 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
                       Prix d'achat moyen:
                     </p>
                     <p style={{ margin: 0, fontFamily: 'JetBrains Mono, monospace', fontWeight: '600' }}>
-                      ${(Number(selectedHolding.avg_buy_price) || 0).toFixed(2)}
+                      {formatPrice(convertValue(Number(selectedHolding.avg_buy_price) || 0), currency)}
                     </p>
                   </div>
                 </div>
@@ -440,7 +488,7 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
                   marginBottom: '1.5rem'
                 }}>
                   <h4 style={{ color: '#00D4AA', marginBottom: '1rem', fontSize: '1rem' }}>
-                    💰 Aperçu de la vente
+                    💰 Aperçu de la vente ({currency.toUpperCase()})
                   </h4>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
@@ -448,7 +496,10 @@ const Portfolio = ({ portfolio, prices, cryptoNames, onTrade }) => {
                         Montant estimé:
                       </p>
                       <p style={{ margin: 0, fontFamily: 'JetBrains Mono, monospace', fontWeight: '700', color: '#00D4AA' }}>
-                        ${(parseFloat(sellQuantity || 0) * (Number(safePrices[selectedHolding.crypto_id]?.usd) || 0)).toFixed(2)}
+                        {formatPrice(
+                          parseFloat(sellQuantity || 0) * getPriceValue(safePrices[selectedHolding.crypto_id], currency),
+                          currency
+                        )}
                       </p>
                     </div>
                     <div>

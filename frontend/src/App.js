@@ -5,10 +5,12 @@ import TradingPanel from './components/TradingPanel';
 import PriceList from './components/PriceList';
 import DiscordInvite from './components/DiscordInvite';
 import CryptoSelector from './components/CryptoSelector';
+import CurrencySwitch from './components/CurrencySwitch';
 import AnimatedBackground from './components/AnimatedBackground';
 import Login from './components/Login';
 import Register from './components/Register';
 import authService from './services/authService';
+import { getCurrencyPreference, saveCurrencyPreference, formatPrice, getPriceValue } from './utils/currencyUtils';
 import './App.css';
 
 const API_BASE_URL = 'http://localhost:3001/api';
@@ -17,6 +19,7 @@ const WS_URL = 'ws://localhost:8080';
 function App() {
   const [prices, setPrices] = useState({});
   const [selectedCrypto, setSelectedCrypto] = useState('bitcoin');
+  const [currency, setCurrency] = useState(getCurrencyPreference());
   const [user, setUser] = useState(null);
   const [portfolio, setPortfolio] = useState({ holdings: [], total_crypto_value: 0, cash_balance: 0 });
   const [ws, setWs] = useState(null);
@@ -24,6 +27,15 @@ function App() {
   const [showRegister, setShowRegister] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [backendReady, setBackendReady] = useState(false);
+
+  // Gérer le changement de devise
+  const handleCurrencyChange = (newCurrency) => {
+    setCurrency(newCurrency);
+    saveCurrencyPreference(newCurrency);
+    
+    // Animation de feedback
+    createInfoNotification(`Devise changée vers ${newCurrency.toUpperCase()}`);
+  };
 
   // Vérifier si le backend est prêt
   const checkBackendHealth = async () => {
@@ -285,7 +297,8 @@ function App() {
         message = `🎉 Bienvenue ${amount}!<br><small>Compte créé avec succès</small>`;
       }
     } else {
-      message = `🎉 ${type === 'buy' ? 'Achat' : 'Vente'} réussi!<br><small>${cryptoId.toUpperCase()} - ${amount} ${type === 'buy' ? 'USD' : 'unités'}</small>`;
+      const currencySymbol = currency === 'usd' ? '$' : '€';
+      message = `🎉 ${type === 'buy' ? 'Achat' : 'Vente'} réussi!<br><small>${cryptoId.toUpperCase()} - ${currencySymbol}${amount} ${type === 'buy' ? '' : 'unités'}</small>`;
     }
     
     notification.innerHTML = message;
@@ -462,90 +475,6 @@ function App() {
     );
   }
 
-  // Afficher l'écran d'authentification si pas connecté
-  if (!user) {
-    return (
-      <div className="app">
-        <AnimatedBackground />
-        {showRegister ? (
-          <Register 
-            onRegister={handleRegister}
-            onSwitchToLogin={() => setShowRegister(false)}
-          />
-        ) : (
-          <Login 
-            onLogin={handleLogin}
-            onSwitchToRegister={() => setShowRegister(true)}
-          />
-        )}
-      </div>
-    );
-  }
-
-  // Loading screen pour les données utilisateur
-  if (isLoading) {
-    return (
-      <div className="app">
-        <AnimatedBackground />
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(11, 11, 15, 0.9)',
-          backdropFilter: 'blur(10px)',
-          zIndex: 1000
-        }}>
-          <div style={{
-            width: '80px',
-            height: '80px',
-            border: '4px solid rgba(0, 212, 170, 0.3)',
-            borderTop: '4px solid #00D4AA',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-            marginBottom: '2rem'
-          }} />
-          <h2 style={{
-            background: 'linear-gradient(135deg, #00D4AA, #7C3AED)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            fontSize: '2rem',
-            fontWeight: '800',
-            marginBottom: '1rem',
-            animation: 'pulse 2s ease-in-out infinite'
-          }}>
-            🚀 Crypto Trading Simulator
-          </h2>
-          <p style={{ color: '#9CA3AF', fontSize: '1.1rem', textAlign: 'center' }}>
-            Bienvenue {user.username}!<br/>
-            Chargement de votre espace de trading...
-          </p>
-          <div style={{
-            marginTop: '2rem',
-            display: 'flex',
-            gap: '0.5rem'
-          }}>
-            {[0, 1, 2].map(i => (
-              <div key={i} style={{
-                width: '8px',
-                height: '8px',
-                background: '#00D4AA',
-                borderRadius: '50%',
-                animation: `bounce 1.4s ease-in-out ${i * 0.16}s infinite both`
-              }} />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // Interface principale avec utilisateur connecté
   return (
     <div className="app">
@@ -554,6 +483,15 @@ function App() {
 
       <header className="app-header cascade-animation">
         <h1>🚀 Cryptobu</h1>
+        
+        {/* Section centrale avec sélecteur de devise */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <CurrencySwitch 
+            currency={currency}
+            onCurrencyChange={handleCurrencyChange}
+          />
+        </div>
+
         <div className="user-info">
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
             <div style={{
@@ -580,7 +518,7 @@ function App() {
             </div>
           </div>
           <span className="balance">
-            Solde: ${user.balance ? parseFloat(user.balance).toFixed(2) : '0.00'}
+            Solde: {formatPrice(parseFloat(user.balance || 0), 'usd')}
           </span>
           <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
             <button
@@ -628,22 +566,25 @@ function App() {
               onSelectCrypto={setSelectedCrypto}
               cryptoNames={cryptoNames}
               prices={prices}
+              currency={currency}
             />
           </div>
 
           <div className="cascade-animation">
             <CryptoChart 
               cryptoId={selectedCrypto}
-              currentPrice={prices[selectedCrypto]?.usd}
+              currentPrice={getPriceValue(prices[selectedCrypto], currency)}
+              currency={currency}
             />
           </div>
 
           <div className="cascade-animation">
             <TradingPanel
               selectedCrypto={selectedCrypto}
-              currentPrice={prices[selectedCrypto]?.usd}
+              currentPrice={getPriceValue(prices[selectedCrypto], currency)}
               onTrade={executeTrade}
               userBalance={parseFloat(user.balance || 0)}
+              currency={currency}
             />
           </div>
 
@@ -659,6 +600,7 @@ function App() {
               cryptoNames={cryptoNames}
               onSelectCrypto={setSelectedCrypto}
               selectedCrypto={selectedCrypto}
+              currency={currency}
             />
           </div>
 
@@ -668,6 +610,7 @@ function App() {
               prices={prices}
               cryptoNames={cryptoNames}
               onTrade={executeTrade}
+              currency={currency}
             />
           </div>
         </div>

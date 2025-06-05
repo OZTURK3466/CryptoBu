@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { formatPrice, getSymbolForCurrency, getCurrencyName } from '../utils/currencyUtils';
 
-const TradingPanel = ({ selectedCrypto, currentPrice, onTrade, userBalance }) => {
+const TradingPanel = ({ selectedCrypto, currentPrice, onTrade, userBalance, currency = 'usd' }) => {
   const [tradeType, setTradeType] = useState('buy');
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,14 +17,20 @@ const TradingPanel = ({ selectedCrypto, currentPrice, onTrade, userBalance }) =>
       return;
     }
 
-    if (tradeType === 'buy' && parseFloat(amount) > userBalance) {
+    // Pour l'achat, on convertit toujours en USD pour l'API
+    let tradeAmount = parseFloat(amount);
+    if (tradeType === 'buy' && currency === 'eur') {
+      tradeAmount = tradeAmount / 0.92; // Conversion EUR -> USD approximative
+    }
+
+    if (tradeType === 'buy' && tradeAmount > userBalance) {
       alert('Solde insuffisant');
       return;
     }
 
     setLoading(true);
     try {
-      await onTrade(tradeType, selectedCrypto, parseFloat(amount));
+      await onTrade(tradeType, selectedCrypto, tradeAmount);
       setAmount('');
     } catch (error) {
       console.error('Erreur lors du trade:', error);
@@ -75,10 +82,52 @@ const TradingPanel = ({ selectedCrypto, currentPrice, onTrade, userBalance }) =>
   };
 
   const cryptoName = selectedCrypto.charAt(0).toUpperCase() + selectedCrypto.slice(1);
+  const currencySymbol = getSymbolForCurrency(currency);
+  const currencyName = getCurrencyName(currency);
+
+  // Montants rapides selon la devise
+  const getQuickAmounts = () => {
+    if (tradeType === 'buy') {
+      if (currency === 'eur') {
+        return [
+          { label: '€100', value: '100' },
+          { label: '€500', value: '500' },
+          { label: '€1000', value: '1000' },
+          { label: 'MAX', value: (userBalance * 0.92).toString() } // Conversion USD -> EUR
+        ];
+      } else {
+        return [
+          { label: '$100', value: '100' },
+          { label: '$500', value: '500' },
+          { label: '$1000', value: '1000' },
+          { label: 'MAX', value: userBalance.toString() }
+        ];
+      }
+    } else {
+      return [
+        { label: '0.001', value: '0.001' },
+        { label: '0.01', value: '0.01' },
+        { label: '0.1', value: '0.1' },
+        { label: '1.0', value: '1.0' }
+      ];
+    }
+  };
+
+  const quickAmounts = getQuickAmounts();
 
   return (
     <div className="trading-panel">
-      <h3>Panel de Trading</h3>
+      <h3>
+        Panel de Trading 
+        <span style={{ 
+          fontSize: '0.875rem', 
+          fontWeight: '500', 
+          color: '#9CA3AF',
+          marginLeft: '0.5rem'
+        }}>
+          ({currencyName})
+        </span>
+      </h3>
       
       <div className="crypto-info">
         <div className="selected-crypto">
@@ -109,7 +158,7 @@ const TradingPanel = ({ selectedCrypto, currentPrice, onTrade, userBalance }) =>
           </div>
           {currentPrice && (
             <div className="crypto-price">
-              ${currentPrice.toFixed(2)}
+              {formatPrice(currentPrice, currency)}
             </div>
           )}
         </div>
@@ -212,13 +261,13 @@ const TradingPanel = ({ selectedCrypto, currentPrice, onTrade, userBalance }) =>
             fontWeight: '500',
             fontSize: '0.875rem'
           }}>
-            {tradeType === 'buy' ? '💵 Montant (USD)' : '📊 Quantité'}
+            {tradeType === 'buy' ? `💵 Montant (${currencySymbol})` : '📊 Quantité'}
           </label>
           <input
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder={tradeType === 'buy' ? '100.00' : '0.001'}
+            placeholder={tradeType === 'buy' ? (currency === 'eur' ? '100.00' : '100.00') : '0.001'}
             step={tradeType === 'buy' ? '0.01' : '0.00001'}
             min="0"
             style={{
@@ -283,7 +332,7 @@ const TradingPanel = ({ selectedCrypto, currentPrice, onTrade, userBalance }) =>
                   fontWeight: '700',
                   color: '#00D4AA'
                 }}>
-                  ${calculateTotal().toFixed(2)}
+                  {formatPrice(calculateTotal(), currency)}
                 </div>
               </div>
               <div style={{ gridColumn: '1 / -1' }}>
@@ -295,7 +344,7 @@ const TradingPanel = ({ selectedCrypto, currentPrice, onTrade, userBalance }) =>
                   fontWeight: '600',
                   color: '#FFFFFF'
                 }}>
-                  ${currentPrice.toFixed(2)}
+                  {formatPrice(currentPrice, currency)}
                 </div>
               </div>
             </div>
@@ -313,209 +362,45 @@ const TradingPanel = ({ selectedCrypto, currentPrice, onTrade, userBalance }) =>
             ⚡ Montants rapides:
           </span>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem' }}>
-            {tradeType === 'buy' ? (
-              <>
-                <button 
-                  onClick={() => setAmount('100')}
-                  style={{
-                    padding: '0.75rem 0.5rem',
-                    border: '1px solid rgba(55, 65, 81, 0.5)',
-                    background: 'rgba(26, 26, 46, 0.5)',
-                    color: '#9CA3AF',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontSize: '0.875rem',
-                    fontWeight: '600'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.borderColor = '#00D4AA';
-                    e.target.style.color = '#FFFFFF';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.borderColor = 'rgba(55, 65, 81, 0.5)';
-                    e.target.style.color = '#9CA3AF';
-                  }}
-                >
-                  $100
-                </button>
-                <button 
-                  onClick={() => setAmount('500')}
-                  style={{
-                    padding: '0.75rem 0.5rem',
-                    border: '1px solid rgba(55, 65, 81, 0.5)',
-                    background: 'rgba(26, 26, 46, 0.5)',
-                    color: '#9CA3AF',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontSize: '0.875rem',
-                    fontWeight: '600'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.borderColor = '#00D4AA';
-                    e.target.style.color = '#FFFFFF';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.borderColor = 'rgba(55, 65, 81, 0.5)';
-                    e.target.style.color = '#9CA3AF';
-                  }}
-                >
-                  $500
-                </button>
-                <button 
-                  onClick={() => setAmount('1000')}
-                  style={{
-                    padding: '0.75rem 0.5rem',
-                    border: '1px solid rgba(55, 65, 81, 0.5)',
-                    background: 'rgba(26, 26, 46, 0.5)',
-                    color: '#9CA3AF',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontSize: '0.875rem',
-                    fontWeight: '600'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.borderColor = '#00D4AA';
-                    e.target.style.color = '#FFFFFF';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.borderColor = 'rgba(55, 65, 81, 0.5)';
-                    e.target.style.color = '#9CA3AF';
-                  }}
-                >
-                  $1000
-                </button>
-                <button 
-                  onClick={() => setAmount(userBalance.toString())}
-                  style={{
-                    padding: '0.75rem 0.5rem',
-                    border: '1px solid rgba(124, 58, 237, 0.5)',
-                    background: 'rgba(124, 58, 237, 0.2)',
-                    color: '#A855F7',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontSize: '0.875rem',
-                    fontWeight: '700'
-                  }}
-                  onMouseEnter={(e) => {
+            {quickAmounts.map((item, index) => (
+              <button 
+                key={index}
+                onClick={() => setAmount(item.value)}
+                style={{
+                  padding: '0.75rem 0.5rem',
+                  border: index === 3 ? '1px solid rgba(124, 58, 237, 0.5)' : '1px solid rgba(55, 65, 81, 0.5)',
+                  background: index === 3 ? 'rgba(124, 58, 237, 0.2)' : 'rgba(26, 26, 46, 0.5)',
+                  color: index === 3 ? '#A855F7' : '#9CA3AF',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  fontSize: '0.875rem',
+                  fontWeight: index === 3 ? '700' : '600'
+                }}
+                onMouseEnter={(e) => {
+                  if (index === 3) {
                     e.target.style.borderColor = '#A855F7';
                     e.target.style.color = '#FFFFFF';
                     e.target.style.background = 'rgba(124, 58, 237, 0.3)';
-                  }}
-                  onMouseLeave={(e) => {
+                  } else {
+                    e.target.style.borderColor = '#00D4AA';
+                    e.target.style.color = '#FFFFFF';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (index === 3) {
                     e.target.style.borderColor = 'rgba(124, 58, 237, 0.5)';
                     e.target.style.color = '#A855F7';
                     e.target.style.background = 'rgba(124, 58, 237, 0.2)';
-                  }}
-                >
-                  MAX
-                </button>
-              </>
-            ) : (
-              <>
-                <button 
-                  onClick={() => setAmount('0.001')}
-                  style={{
-                    padding: '0.75rem 0.5rem',
-                    border: '1px solid rgba(55, 65, 81, 0.5)',
-                    background: 'rgba(26, 26, 46, 0.5)',
-                    color: '#9CA3AF',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontSize: '0.875rem',
-                    fontWeight: '600'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.borderColor = '#00D4AA';
-                    e.target.style.color = '#FFFFFF';
-                  }}
-                  onMouseLeave={(e) => {
+                  } else {
                     e.target.style.borderColor = 'rgba(55, 65, 81, 0.5)';
                     e.target.style.color = '#9CA3AF';
-                  }}
-                >
-                  0.001
-                </button>
-                <button 
-                  onClick={() => setAmount('0.01')}
-                  style={{
-                    padding: '0.75rem 0.5rem',
-                    border: '1px solid rgba(55, 65, 81, 0.5)',
-                    background: 'rgba(26, 26, 46, 0.5)',
-                    color: '#9CA3AF',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontSize: '0.875rem',
-                    fontWeight: '600'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.borderColor = '#00D4AA';
-                    e.target.style.color = '#FFFFFF';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.borderColor = 'rgba(55, 65, 81, 0.5)';
-                    e.target.style.color = '#9CA3AF';
-                  }}
-                >
-                  0.01
-                </button>
-                <button 
-                  onClick={() => setAmount('0.1')}
-                  style={{
-                    padding: '0.75rem 0.5rem',
-                    border: '1px solid rgba(55, 65, 81, 0.5)',
-                    background: 'rgba(26, 26, 46, 0.5)',
-                    color: '#9CA3AF',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontSize: '0.875rem',
-                    fontWeight: '600'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.borderColor = '#00D4AA';
-                    e.target.style.color = '#FFFFFF';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.borderColor = 'rgba(55, 65, 81, 0.5)';
-                    e.target.style.color = '#9CA3AF';
-                  }}
-                >
-                  0.1
-                </button>
-                <button 
-                  onClick={() => setAmount('1.0')}
-                  style={{
-                    padding: '0.75rem 0.5rem',
-                    border: '1px solid rgba(124, 58, 237, 0.5)',
-                    background: 'rgba(124, 58, 237, 0.2)',
-                    color: '#A855F7',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontSize: '0.875rem',
-                    fontWeight: '700'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.borderColor = '#A855F7';
-                    e.target.style.color = '#FFFFFF';
-                    e.target.style.background = 'rgba(124, 58, 237, 0.3)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.borderColor = 'rgba(124, 58, 237, 0.5)';
-                    e.target.style.color = '#A855F7';
-                    e.target.style.background = 'rgba(124, 58, 237, 0.2)';
-                  }}
-                >
-                  1.0
-                </button>
-              </>
-            )}
+                  }
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -584,7 +469,8 @@ const TradingPanel = ({ selectedCrypto, currentPrice, onTrade, userBalance }) =>
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          marginBottom: '0.75rem'
         }}>
           <span style={{ color: '#9CA3AF', fontWeight: '500' }}>
             💳 Solde disponible:
@@ -595,8 +481,42 @@ const TradingPanel = ({ selectedCrypto, currentPrice, onTrade, userBalance }) =>
             fontSize: '1.125rem',
             fontFamily: 'JetBrains Mono, monospace'
           }}>
-            ${userBalance.toFixed(2)}
+            {formatPrice(userBalance, 'usd')}
           </span>
+        </div>
+        
+        {/* Affichage dans l'autre devise si différente */}
+        {currency !== 'usd' && (
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            fontSize: '0.875rem'
+          }}>
+            <span style={{ color: '#9CA3AF', fontWeight: '500' }}>
+              ≈ Équivalent {currencyName}:
+            </span>
+            <span style={{
+              color: '#60A5FA',
+              fontWeight: '600',
+              fontFamily: 'JetBrains Mono, monospace'
+            }}>
+              {formatPrice(userBalance * 0.92, currency)}
+            </span>
+          </div>
+        )}
+        
+        <div style={{
+          marginTop: '1rem',
+          padding: '0.75rem',
+          background: 'rgba(0, 212, 170, 0.1)',
+          borderRadius: '8px',
+          border: '1px solid rgba(0, 212, 170, 0.2)',
+          fontSize: '0.75rem',
+          color: '#9CA3AF',
+          textAlign: 'center'
+        }}>
+          💡 Les transactions sont effectuées en USD. La conversion est approximative.
         </div>
       </div>
     </div>

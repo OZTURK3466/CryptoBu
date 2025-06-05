@@ -2,9 +2,9 @@
 > frontend@0.1.0 start
 > react-scripts start
 
-(node:5633) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:9487) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 (Use `node --trace-deprecation ...` to show where the warning was created)
-(node:5633) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:9487) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 Starting the development server...
 
 Compiled successfully!
@@ -18,3 +18,392 @@ Note that the development build is not optimized.
 To create a production build, use npm run build.
 
 webpack compiled successfully
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/Portfolio.js
+  Line 2:10:  'formatPrice' is defined but never used           no-unused-vars
+  Line 2:23:  'getPriceValue' is defined but never used         no-unused-vars
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/Portfolio.js
+  Line 2:10:  'formatPrice' is defined but never used           no-unused-vars
+  Line 2:23:  'getPriceValue' is defined but never used         no-unused-vars
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/Portfolio.js
+  Line 2:10:  'formatPrice' is defined but never used           no-unused-vars
+  Line 2:23:  'getPriceValue' is defined but never used         no-unused-vars
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/Portfolio.js
+  Line 2:10:  'formatPrice' is defined but never used           no-unused-vars
+  Line 2:23:  'getPriceValue' is defined but never used         no-unused-vars
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/Portfolio.js
+  Line 2:10:  'formatPrice' is defined but never used           no-unused-vars
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/Portfolio.js
+  Line 2:10:  'formatPrice' is defined but never used           no-unused-vars
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/Portfolio.js
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+  Line 2:60:  'formatLargeNumber' is defined but never used     no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/Portfolio.js
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+  Line 2:60:  'formatLargeNumber' is defined but never used     no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/CryptoChart.js
+  Line 39:6:  React Hook useEffect has a missing dependency: 'fetchHistoricalData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/Portfolio.js
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+  Line 2:60:  'formatLargeNumber' is defined but never used     no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/CryptoChart.js
+  Line 39:6:  React Hook useEffect has a missing dependency: 'fetchHistoricalData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/Portfolio.js
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+  Line 2:60:  'formatLargeNumber' is defined but never used     no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/CryptoChart.js
+  Line 39:6:  React Hook useEffect has a missing dependency: 'fetchHistoricalData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/Portfolio.js
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+  Line 2:60:  'formatLargeNumber' is defined but never used     no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/CryptoChart.js
+  Line 39:6:  React Hook useEffect has a missing dependency: 'fetchHistoricalData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/Portfolio.js
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+  Line 2:60:  'formatLargeNumber' is defined but never used     no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/CryptoChart.js
+  Line 39:6:  React Hook useEffect has a missing dependency: 'fetchHistoricalData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/Portfolio.js
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+  Line 2:60:  'formatLargeNumber' is defined but never used     no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/CryptoChart.js
+  Line 39:6:  React Hook useEffect has a missing dependency: 'fetchHistoricalData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/Portfolio.js
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+  Line 2:60:  'formatLargeNumber' is defined but never used     no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/CryptoChart.js
+  Line 39:6:  React Hook useEffect has a missing dependency: 'fetchHistoricalData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/Portfolio.js
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+  Line 2:60:  'formatLargeNumber' is defined but never used     no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 10:8:   'Login' is defined but never used                     no-unused-vars
+  Line 11:8:   'Register' is defined but never used                  no-unused-vars
+  Line 25:10:  'ws' is assigned a value but never used               no-unused-vars
+  Line 27:10:  'showRegister' is assigned a value but never used     no-unused-vars
+  Line 27:24:  'setShowRegister' is assigned a value but never used  no-unused-vars
+  Line 248:9:  'handleLogin' is assigned a value but never used      no-unused-vars
+  Line 254:9:  'handleRegister' is assigned a value but never used   no-unused-vars
+
+src/components/CryptoChart.js
+  Line 39:6:  React Hook useEffect has a missing dependency: 'fetchHistoricalData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/components/Portfolio.js
+  Line 2:38:  'getSymbolForCurrency' is defined but never used  no-unused-vars
+  Line 2:60:  'formatLargeNumber' is defined but never used     no-unused-vars
+
+webpack compiled with 1 warning

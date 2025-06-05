@@ -1,6 +1,7 @@
 import React from 'react';
+import { formatPrice, formatChange, getPriceValue, formatLargeNumber, getSymbolForCurrency } from '../utils/currencyUtils';
 
-const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCrypto }) => {
+const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCrypto, currency = 'usd' }) => {
   // Vérification de sécurité pour éviter les erreurs
   if (!prices || Object.keys(prices).length === 0) {
     return (
@@ -12,27 +13,10 @@ const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCryp
   }
 
   const sortedCryptos = Object.keys(prices).sort((a, b) => {
-    const priceA = prices[a]?.usd || 0;
-    const priceB = prices[b]?.usd || 0;
+    const priceA = getPriceValue(prices[a], currency) || 0;
+    const priceB = getPriceValue(prices[b], currency) || 0;
     return priceB - priceA;
   });
-
-  const formatChange = (change) => {
-    if (!change) return '+0.00%';
-    const formatted = change.toFixed(2);
-    return change >= 0 ? `+${formatted}%` : `${formatted}%`;
-  };
-
-  const formatPrice = (price) => {
-    if (!price) return '$0.00';
-    if (price < 0.01) {
-      return `$${price.toFixed(6)}`;
-    } else if (price < 1) {
-      return `$${price.toFixed(4)}`;
-    } else {
-      return `$${price.toFixed(2)}`;
-    }
-  };
 
   const getCryptoIcon = (cryptoId) => {
     const icons = {
@@ -82,14 +66,12 @@ const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCryp
   };
 
   const getTotalMarketCap = () => {
-    return Object.values(prices).reduce((acc, p) => acc + (p?.usd_market_cap || 0), 0);
-  };
-
-  const formatMarketCap = (marketCap) => {
-    if (marketCap >= 1e12) return `$${(marketCap / 1e12).toFixed(1)}T`;
-    if (marketCap >= 1e9) return `$${(marketCap / 1e9).toFixed(1)}B`;
-    if (marketCap >= 1e6) return `$${(marketCap / 1e6).toFixed(1)}M`;
-    return `$${marketCap.toFixed(0)}`;
+    return Object.values(prices).reduce((acc, p) => {
+      const marketCap = currency === 'eur' 
+        ? (p?.usd_market_cap || 0) * 0.92 // Conversion approximative USD -> EUR
+        : (p?.usd_market_cap || 0);
+      return acc + marketCap;
+    }, 0);
   };
 
   // Fonction sécurisée pour obtenir le top performer
@@ -117,12 +99,22 @@ const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCryp
 
   return (
     <div className="price-list">
-      <h3>Prix en Temps Réel</h3>
+      <h3>
+        Prix en Temps Réel 
+        <span style={{ 
+          fontSize: '0.875rem', 
+          fontWeight: '500', 
+          color: '#9CA3AF',
+          marginLeft: '0.5rem'
+        }}>
+          ({currency.toUpperCase()})
+        </span>
+      </h3>
       
       <div className="price-list-header">
         <div className="header-row">
           <span>Cryptomonnaie</span>
-          <span>Prix</span>
+          <span>Prix ({getSymbolForCurrency(currency)})</span>
           <span>24h</span>
         </div>
       </div>
@@ -133,6 +125,7 @@ const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCryp
           const isSelected = cryptoId === selectedCrypto;
           const change24h = crypto?.usd_24h_change || 0;
           const isPositive = change24h >= 0;
+          const currentPrice = getPriceValue(crypto, currency);
 
           return (
             <div
@@ -166,8 +159,13 @@ const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCryp
               </div>
 
               <div className="price-cell">
-                <span className="price">{formatPrice(crypto?.usd)}</span>
-                <span className="price-eur">€{formatPrice(crypto?.eur)}</span>
+                <span className="price">{formatPrice(currentPrice, currency)}</span>
+                {currency === 'usd' && crypto?.eur && (
+                  <span className="price-eur">≈ {formatPrice(crypto.eur, 'eur')}</span>
+                )}
+                {currency === 'eur' && crypto?.usd && (
+                  <span className="price-eur">≈ {formatPrice(crypto.usd, 'usd')}</span>
+                )}
               </div>
 
               <div className={`change-cell ${isPositive ? 'positive' : 'negative'}`}>
@@ -181,7 +179,7 @@ const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCryp
       </div>
 
       <div className="market-summary">
-        <h4>Résumé du Marché</h4>
+        <h4>Résumé du Marché ({currency.toUpperCase()})</h4>
         <div className="summary-stats">
           <div className="stat">
             <span className="stat-label">Cryptos Suivies</span>
@@ -189,7 +187,7 @@ const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCryp
           </div>
           <div className="stat">
             <span className="stat-label">Market Cap Total</span>
-            <span className="stat-value">{formatMarketCap(totalMarketCap)}</span>
+            <span className="stat-value">{formatLargeNumber(totalMarketCap, currency)}</span>
           </div>
           <div className="stat">
             <span className="stat-label">Volatilité</span>
@@ -202,13 +200,9 @@ const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCryp
             <span className="stat-value" style={{ color: '#34D399' }}>🟢 LIVE</span>
           </div>
           <div className="stat">
-            <span className="stat-label">Dernière MAJ</span>
-            <span className="stat-value">
-              {new Date().toLocaleTimeString('fr-FR', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                second: '2-digit'
-              })}
+            <span className="stat-label">Devise Actuelle</span>
+            <span className="stat-value" style={{ color: currency === 'usd' ? '#10B981' : '#3B82F6' }}>
+              {getSymbolForCurrency(currency)} {currency.toUpperCase()}
             </span>
           </div>
           <div className="stat">

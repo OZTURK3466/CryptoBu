@@ -2,16 +2,110 @@
 > backend@1.0.0 start
 > node server.js
 
+🔄 Récupération des prix depuis CoinGecko...
 🚀 Serveur backend démarré sur le port 3001
 📊 API disponible sur http://localhost:3001/api
 🔌 WebSocket server démarré sur le port 8080
+⏰ Délai entre appels API: 60s
 ✅ Connexion à la base de données réussie
+✅ Prix mis à jour: 12:35:33
+Client connecté au WebSocket
+Client connecté au WebSocket
 Client connecté au WebSocket
 📊 Récupération historique: bitcoin, 7 jours
 🔍 Appel CoinGecko API: bitcoin, 7 jours
 ✅ CoinGecko API réponse: 8 points
-✅ 8 points de données récupérés pour bitcoin
+✅ 8 points de données renvoyés pour bitcoin
+📊 Récupération historique: bitcoin, 7 jours
+📊 Utilisation du cache pour bitcoin (7 jours)
+✅ 8 points de données renvoyés pour bitcoin
+📊 Récupération historique: polygon, 7 jours
+🔍 Appel CoinGecko API: polygon, 7 jours
+❌ Erreur CoinGecko API pour polygon: Request failed with status code 404
+Status: 404, Data: { error: 'coin not found' }
+⚠️ Utilisation de données de fallback pour polygon
+📊 Génération de données de fallback pour polygon
+✅ 7 points de données renvoyés pour polygon
+📊 Récupération historique: bitcoin-cash, 7 jours
+🔍 Appel CoinGecko API: bitcoin-cash, 7 jours
+✅ CoinGecko API réponse: 8 points
+✅ 8 points de données renvoyés pour bitcoin-cash
+📊 Récupération historique: ethereum, 7 jours
+🔍 Appel CoinGecko API: ethereum, 7 jours
+✅ CoinGecko API réponse: 8 points
+✅ 8 points de données renvoyés pour ethereum
+🔄 Récupération des prix depuis CoinGecko...
+✅ Prix mis à jour: 12:40:33
+🔄 Récupération des prix depuis CoinGecko...
+✅ Prix mis à jour: 12:45:33
+Client déconnecté du WebSocket
+Client connecté au WebSocket
 📊 Récupération historique: bitcoin, 7 jours
 🔍 Appel CoinGecko API: bitcoin, 7 jours
 ✅ CoinGecko API réponse: 8 points
-✅ 8 points de données récupérés pour bitcoin
+✅ 8 points de données renvoyés pour bitcoin
+📊 Récupération historique: bitcoin, 7 jours
+📊 Utilisation du cache pour bitcoin (7 jours)
+✅ 8 points de données renvoyés pour bitcoin
+🔄 Récupération des prix depuis CoinGecko...
+✅ Prix mis à jour: 12:50:33
+🔄 Récupération des prix depuis CoinGecko...
+✅ Prix mis à jour: 12:55:33
+🔄 Récupération des prix depuis CoinGecko...
+✅ Prix mis à jour: 13:00:33
+Client connecté au WebSocket
+📊 Récupération historique: bitcoin, 7 jours
+🔍 Appel CoinGecko API: bitcoin, 7 jours
+✅ CoinGecko API réponse: 8 points
+✅ 8 points de données renvoyés pour bitcoin
+📊 Récupération historique: bitcoin, 7 jours
+📊 Utilisation du cache pour bitcoin (7 jours)
+✅ 8 points de données renvoyés pour bitcoin
+📊 Récupération historique: bitcoin, 1 jours
+🔍 Appel CoinGecko API: bitcoin, 1 jours
+❌ Erreur CoinGecko API pour bitcoin: Request failed with status code 401
+Status: 401, Data: {
+  status: {
+    timestamp: '2025-06-05T11:02:38.333+00:00',
+    error_code: 10005,
+    error_message: "interval=hourly is exclusive to Enterprise plan customers only. Contact for Enterprise plan enquiry: https://www.coingecko.com/en/api/pricing. Tips: you can retrieve hourly interval data automatically, as long as the 'days' value is between 2 to 90 days; you don't have to specify the interval parameter."
+  }
+}
+⚠️ Utilisation de données de fallback pour bitcoin
+📊 Génération de données de fallback pour bitcoin
+✅ 24 points de données renvoyés pour bitcoin
+📊 Récupération historique: bitcoin, 30 jours
+🔍 Appel CoinGecko API: bitcoin, 30 jours
+✅ CoinGecko API réponse: 31 points
+✅ 31 points de données renvoyés pour bitcoin
+🔄 Récupération des prix depuis CoinGecko...
+✅ Prix mis à jour: 13:05:33
+🔄 Récupération des prix depuis CoinGecko...
+✅ Prix mis à jour: 13:10:33
+Client déconnecté du WebSocket
+Client connecté au WebSocket
+📊 Récupération historique: bitcoin, 7 jours
+🔍 Appel CoinGecko API: bitcoin, 7 jours
+✅ CoinGecko API réponse: 8 points
+✅ 8 points de données renvoyés pour bitcoin
+📊 Récupération historique: bitcoin, 7 jours
+📊 Utilisation du cache pour bitcoin (7 jours)
+✅ 8 points de données renvoyés pour bitcoin
+Client déconnecté du WebSocket
+Client connecté au WebSocket
+📊 Récupération historique: bitcoin, 7 jours
+📊 Utilisation du cache pour bitcoin (7 jours)
+✅ 8 points de données renvoyés pour bitcoin
+📊 Récupération historique: bitcoin, 7 jours
+📊 Utilisation du cache pour bitcoin (7 jours)
+✅ 8 points de données renvoyés pour bitcoin
+Client déconnecté du WebSocket
+Client connecté au WebSocket
+📊 Récupération historique: bitcoin, 7 jours
+📊 Utilisation du cache pour bitcoin (7 jours)
+✅ 8 points de données renvoyés pour bitcoin
+📊 Récupération historique: bitcoin, 7 jours
+📊 Utilisation du cache pour bitcoin (7 jours)
+✅ 8 points de données renvoyés pour bitcoin
+🔄 Récupération des prix depuis CoinGecko...
+✅ Prix mis à jour: 13:15:33

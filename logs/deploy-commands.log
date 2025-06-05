@@ -1,0 +1,12 @@
+
+> crypto-discord-bot@1.0.0 deploy
+> node deploy-commands.js
+
+🚀 Déploiement des commandes améliorées...
+✅ 5 commandes déployées avec succès!
+📋 Commandes disponibles:
+   - /crypto: Afficher le prix d'une cryptomonnaie
+   - /portfolio: Afficher toutes les cryptomonnaies suivies
+   - /chart: Afficher le graphique d'une cryptomonnaie
+   - /compare: Comparer deux cryptomonnaies
+   - /help: Afficher l'aide du bot crypto

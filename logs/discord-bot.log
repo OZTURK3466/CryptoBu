@@ -1,6 +1,7 @@
 
-> crypto-discord-bot@1.0.0 simple
-> node bot-simple.js
+> crypto-discord-bot@1.0.0 start
+> node bot.js
 
-🤖 Bot connecté : CrypBu#7222!
-Prix mis à jour: 23:42:44
+🚀 Bot connecté en tant que CrypBu#7222!
+✅ Commandes slash enregistrées avec succès!
+✅ Prix mis à jour: 11:35:29

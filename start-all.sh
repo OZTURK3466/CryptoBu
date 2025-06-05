@@ -29,7 +29,7 @@ cleanup() {
     # Tuer les processus Node.js liés au projet
     pkill -f "node.*server.js" 2>/dev/null
     pkill -f "react-scripts start" 2>/dev/null
-    pkill -f "node.*bot-simple.js" 2>/dev/null
+    pkill -f "node.*bot.js" 2>/dev/null
     pkill -f "nodemon" 2>/dev/null
     
     # Attendre un peu pour que les processus se terminent proprement
@@ -75,7 +75,7 @@ wait_for_port_free() {
 log "${PURPLE}🧹 Nettoyage des anciens processus...${NC}"
 pkill -f "node.*server.js" 2>/dev/null
 pkill -f "react-scripts start" 2>/dev/null
-pkill -f "node.*bot-simple.js" 2>/dev/null
+pkill -f "node.*bot.js" 2>/dev/null
 pkill -f "nodemon" 2>/dev/null
 
 # Attendre que les ports se libèrent
@@ -180,15 +180,9 @@ log "${YELLOW}🤖 Démarrage du Bot Discord...${NC}"
 cd "$DISCORD_BOT_DIR"
 
 # Vérifier si le script simple existe
-if grep -q '"simple"' package.json; then
-    nohup npm run simple > "$PROJECT_DIR/logs/discord-bot.log" 2>&1 &
-    BOT_PID=$!
-    log "${YELLOW}🤖 Bot Discord démarré avec npm run simple (PID: $BOT_PID)${NC}"
-else
-    nohup npm start > "$PROJECT_DIR/logs/discord-bot.log" 2>&1 &
-    BOT_PID=$!
-    log "${YELLOW}🤖 Bot Discord démarré avec npm start (PID: $BOT_PID)${NC}"
-fi
+nohup npm start > "$PROJECT_DIR/logs/discord-bot.log" 2>&1 &
+BOT_PID=$!
+log "${YELLOW}🤖 Bot Discord démarré avec npm start - Version complète (PID: $BOT_PID)${NC}"
 
 # Attendre que le bot démarre
 sleep 3

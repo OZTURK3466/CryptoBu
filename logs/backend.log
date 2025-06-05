@@ -7,3 +7,11 @@
 🔌 WebSocket server démarré sur le port 8080
 ✅ Connexion à la base de données réussie
 Client connecté au WebSocket
+📊 Récupération historique: bitcoin, 7 jours
+🔍 Appel CoinGecko API: bitcoin, 7 jours
+✅ CoinGecko API réponse: 8 points
+✅ 8 points de données récupérés pour bitcoin
+📊 Récupération historique: bitcoin, 7 jours
+🔍 Appel CoinGecko API: bitcoin, 7 jours
+✅ CoinGecko API réponse: 8 points
+✅ 8 points de données récupérés pour bitcoin

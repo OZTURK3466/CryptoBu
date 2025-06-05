@@ -12,7 +12,7 @@ import {
   Filler,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { formatPrice, getSymbolForCurrency, getCurrencyName } from '../utils/currencyUtils';
+import { formatPrice, getSymbolForCurrency, getCurrencyName, getPriceValue } from '../utils/currencyUtils';
 import 'chartjs-adapter-date-fns';
 
 ChartJS.register(
@@ -34,30 +34,7 @@ const CryptoChart = ({ cryptoId, currentPrice, currency = 'usd' }) => {
   const [error, setError] = useState(null);
   const chartRef = useRef(null);
 
-  useEffect(() => {
-    fetchHistoricalData();
-  }, [cryptoId, timeframe]);
-
-  // Mettre à jour le prix en temps réel
-  useEffect(() => {
-    if (chartData && currentPrice && chartRef.current) {
-      const chart = chartRef.current;
-      const now = new Date();
-      
-      // Ajouter le nouveau point de prix
-      chart.data.labels.push(now);
-      chart.data.datasets[0].data.push(currentPrice);
-      
-      // Garder seulement les 100 derniers points pour éviter la surcharge
-      if (chart.data.labels.length > 100) {
-        chart.data.labels.shift();
-        chart.data.datasets[0].data.shift();
-      }
-      
-      chart.update('none'); // Update sans animation pour plus de fluidité
-    }
-  }, [currentPrice, chartData]);
-
+  // Fonction pour récupérer les données historiques
   const fetchHistoricalData = async () => {
     setLoading(true);
     setError(null);
@@ -72,20 +49,21 @@ const CryptoChart = ({ cryptoId, currentPrice, currency = 'usd' }) => {
       const data = await response.json();
       
       if (data.prices && data.prices.length > 0) {
-        // Convertir les prix selon la devise sélectionnée
-        const convertPrice = (usdPrice) => {
-          if (currency === 'eur') {
-            return usdPrice * 0.92; // Conversion approximative USD -> EUR
-          }
-          return usdPrice;
-        };
-
+        // NE PAS convertir ici - utiliser directement les prix USD de l'API
+        // La conversion sera faite dans l'affichage
         const formattedData = {
           labels: data.prices.map(price => new Date(price[0])),
           datasets: [
             {
               label: `Prix (${currency.toUpperCase()})`,
-              data: data.prices.map(price => convertPrice(price[1])),
+              data: data.prices.map(price => {
+                const usdPrice = price[1];
+                // Convertir selon la devise sélectionnée
+                if (currency === 'eur') {
+                  return usdPrice * 0.92; // Conversion USD -> EUR
+                }
+                return usdPrice; // USD par défaut
+              }),
               borderColor: currency === 'usd' ? '#00D4AA' : '#3B82F6',
               backgroundColor: currency === 'usd' ? 'rgba(0, 212, 170, 0.1)' : 'rgba(59, 130, 246, 0.1)',
               borderWidth: 3,
@@ -110,6 +88,37 @@ const CryptoChart = ({ cryptoId, currentPrice, currency = 'usd' }) => {
       setLoading(false);
     }
   };
+
+  // Recharger les données quand la crypto, la période ou la devise change
+  useEffect(() => {
+    fetchHistoricalData();
+  }, [cryptoId, timeframe, currency]); // Ajout de 'currency' dans les dépendances
+
+  // Mettre à jour le prix en temps réel
+  useEffect(() => {
+    if (chartData && currentPrice && chartRef.current) {
+      const chart = chartRef.current;
+      const now = new Date();
+      
+      // Convertir le prix actuel selon la devise
+      let displayPrice = currentPrice;
+      if (currency === 'eur' && typeof currentPrice === 'number') {
+        displayPrice = currentPrice * 0.92;
+      }
+      
+      // Ajouter le nouveau point de prix
+      chart.data.labels.push(now);
+      chart.data.datasets[0].data.push(displayPrice);
+      
+      // Garder seulement les 100 derniers points pour éviter la surcharge
+      if (chart.data.labels.length > 100) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+      }
+      
+      chart.update('none'); // Update sans animation pour plus de fluidité
+    }
+  }, [currentPrice, chartData, currency]); // Ajout de 'currency' dans les dépendances
 
   const currencySymbol = getSymbolForCurrency(currency);
   const currencyName = getCurrencyName(currency);
@@ -355,7 +364,7 @@ const CryptoChart = ({ cryptoId, currentPrice, currency = 'usd' }) => {
                 <span className="price-value" style={{
                   color: currency === 'usd' ? '#00D4AA' : '#3B82F6'
                 }}>
-                  {formatPrice(currentPrice, currency)}
+                  {formatPrice(getPriceValue({ usd: currentPrice, eur: currentPrice * 0.92 }, currency), currency)}
                 </span>
               </div>
             )}
@@ -440,7 +449,7 @@ const CryptoChart = ({ cryptoId, currentPrice, currency = 'usd' }) => {
               <span className="price-value" style={{
                 color: currency === 'usd' ? '#00D4AA' : '#3B82F6'
               }}>
-                {formatPrice(currentPrice, currency)}
+                {formatPrice(getPriceValue({ usd: currentPrice, eur: currentPrice * 0.92 }, currency), currency)}
               </span>
               
               {/* Affichage dans l'autre devise */}

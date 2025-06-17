@@ -8,40 +8,13 @@
 🔌 WebSocket server démarré sur le port 8080
 ⏰ Délai entre appels API: 60s
 ✅ Connexion à la base de données réussie
-✅ Prix mis à jour: 14:41:18
-Client connecté au WebSocket
-Client connecté au WebSocket
-Client connecté au WebSocket
+✅ Prix mis à jour: 19:45:16
 Client connecté au WebSocket
 Client connecté au WebSocket
 Client connecté au WebSocket
 📊 Récupération historique: bitcoin, 7 jours
 🔍 Appel CoinGecko API: bitcoin, 7 jours
 ✅ CoinGecko API réponse: 8 points
-✅ 8 points de données renvoyés pour bitcoin
-📊 Récupération historique: bitcoin, 7 jours
-📊 Utilisation du cache pour bitcoin (7 jours)
-✅ 8 points de données renvoyés pour bitcoin
-Client déconnecté du WebSocket
-Client connecté au WebSocket
-📊 Récupération historique: bitcoin, 7 jours
-📊 Utilisation du cache pour bitcoin (7 jours)
-✅ 8 points de données renvoyés pour bitcoin
-📊 Récupération historique: bitcoin, 7 jours
-📊 Utilisation du cache pour bitcoin (7 jours)
-✅ 8 points de données renvoyés pour bitcoin
-🔄 Récupération des prix depuis CoinGecko...
-✅ Prix mis à jour: 14:46:18
-🔄 Récupération des prix depuis CoinGecko...
-✅ Prix mis à jour: 14:51:18
-Client déconnecté du WebSocket
-Client connecté au WebSocket
-📊 Récupération historique: bitcoin, 7 jours
-🔍 Appel CoinGecko API: bitcoin, 7 jours
-✅ CoinGecko API réponse: 8 points
-✅ 8 points de données renvoyés pour bitcoin
-📊 Récupération historique: bitcoin, 7 jours
-📊 Utilisation du cache pour bitcoin (7 jours)
 ✅ 8 points de données renvoyés pour bitcoin
 📊 Récupération historique: bitcoin, 7 jours
 📊 Utilisation du cache pour bitcoin (7 jours)

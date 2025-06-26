@@ -1,13 +1,221 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { formatPrice, formatChange, getPriceValue, formatLargeNumber, getSymbolForCurrency } from '../utils/currencyUtils';
 
 const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCrypto, currency = 'usd' }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
+  const [lastUpdateTime, setLastUpdateTime] = useState(null);
+
+  // Gérer l'état de chargement
+  useEffect(() => {
+    if (prices && Object.keys(prices).length > 0) {
+      setIsLoading(false);
+      setRetryCount(0);
+      setLastUpdateTime(new Date());
+    } else {
+      // Si pas de prix après 2 secondes, considérer comme en chargement
+      const timer = setTimeout(() => {
+        if (!prices || Object.keys(prices).length === 0) {
+          setIsLoading(true);
+        }
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [prices]);
+
+  // Fonction de retry
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    setIsLoading(true);
+    
+    // Simuler une tentative de reconnexion
+    setTimeout(() => {
+      // Recharger la page en dernier recours
+      window.location.reload();
+    }, 1000);
+  };
+
+  // Fonction pour forcer le refresh des prix
+  const handleForceRefresh = () => {
+    setIsLoading(true);
+    setRetryCount(0);
+    
+    // Tenter de récupérer les prix depuis l'API
+    fetch('http://localhost:3001/api/prices')
+      .then(response => response.json())
+      .then(data => {
+        console.log('Prix récupérés manuellement:', data);
+        // Cette mise à jour devrait être gérée par le parent (App.js)
+        // Mais on peut forcer un refresh de la page si nécessaire
+        setTimeout(() => {
+          if (!prices || Object.keys(prices).length === 0) {
+            window.location.reload();
+          }
+        }, 3000);
+      })
+      .catch(error => {
+        console.error('Erreur lors du refresh manuel:', error);
+        setRetryCount(prev => prev + 1);
+      });
+  };
+
   // Vérification de sécurité pour éviter les erreurs
-  if (!prices || Object.keys(prices).length === 0) {
+  if (isLoading || !prices || Object.keys(prices).length === 0) {
     return (
       <div className="price-list">
-        <h3>Prix en Temps Réel</h3>
-        <div className="loading-message">Chargement des prix...</div>
+        <h3>
+          Prix en Temps Réel 
+          <span style={{ 
+            fontSize: '0.875rem', 
+            fontWeight: '500', 
+            color: '#9CA3AF',
+            marginLeft: '0.5rem'
+          }}>
+            ({currency.toUpperCase()})
+          </span>
+        </h3>
+        
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '4rem 2rem',
+          textAlign: 'center'
+        }}>
+          <div style={{
+            width: '60px',
+            height: '60px',
+            border: '4px solid rgba(0, 212, 170, 0.3)',
+            borderTop: '4px solid #00D4AA',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            marginBottom: '2rem'
+          }} />
+          
+          <h4 style={{ 
+            color: '#FFFFFF', 
+            marginBottom: '1rem',
+            fontSize: '1.25rem'
+          }}>
+            {retryCount === 0 ? 'Chargement des prix...' : 'Reconnexion en cours...'}
+          </h4>
+          
+          <p style={{ 
+            color: '#9CA3AF', 
+            marginBottom: '2rem',
+            lineHeight: '1.6'
+          }}>
+            {retryCount === 0 
+              ? 'Connexion au flux de données en temps réel'
+              : 'Tentative de récupération des données'
+            }
+            {retryCount > 0 && (
+              <>
+                <br />
+                <small style={{ color: '#F59E0B' }}>
+                  Tentative {retryCount + 1}...
+                </small>
+              </>
+            )}
+          </p>
+
+          {/* Bouton de refresh manuel toujours disponible */}
+          <button
+            onClick={handleForceRefresh}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'linear-gradient(135deg, #00D4AA, #00E4BB)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              transition: 'all 0.3s ease',
+              marginBottom: '2rem'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 4px 12px rgba(0, 212, 170, 0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = 'none';
+            }}
+          >
+            🔄 Actualiser maintenant
+          </button>
+
+          {retryCount >= 2 && (
+            <div style={{
+              background: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              borderRadius: '12px',
+              padding: '1.5rem',
+              maxWidth: '400px'
+            }}>
+              <h5 style={{ color: '#F87171', marginBottom: '1rem' }}>
+                ⚠️ Problème de connexion
+              </h5>
+              <p style={{ 
+                color: '#9CA3AF', 
+                fontSize: '0.875rem',
+                marginBottom: '1rem'
+              }}>
+                Impossible de récupérer les prix. Vérifiez que :
+              </p>
+              <ul style={{
+                color: '#9CA3AF',
+                fontSize: '0.875rem',
+                textAlign: 'left',
+                marginBottom: '1rem',
+                paddingLeft: '1rem'
+              }}>
+                <li>Le backend est démarré (port 3001)</li>
+                <li>Votre connexion internet fonctionne</li>
+                <li>Le serveur WebSocket répond (port 8080)</li>
+              </ul>
+              <button
+                onClick={handleRetry}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'linear-gradient(135deg, #EF4444, #F87171)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                }}
+              >
+                🔄 Recharger la page
+              </button>
+            </div>
+          )}
+
+          <div style={{
+            marginTop: '2rem',
+            display: 'flex',
+            gap: '0.5rem'
+          }}>
+            {[0, 1, 2].map(i => (
+              <div key={i} style={{
+                width: '8px',
+                height: '8px',
+                background: '#00D4AA',
+                borderRadius: '50%',
+                animation: `bounce 1.4s ease-in-out ${i * 0.16}s infinite both`
+              }} />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -109,7 +317,71 @@ const PriceList = ({ prices = {}, cryptoNames = {}, onSelectCrypto, selectedCryp
         }}>
           ({currency.toUpperCase()})
         </span>
+        {/* Indicateur de statut en temps réel */}
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          marginLeft: '1rem',
+          fontSize: '0.75rem',
+          color: '#10B981'
+        }}>
+          <span style={{
+            width: '8px',
+            height: '8px',
+            background: '#10B981',
+            borderRadius: '50%',
+            animation: 'pulse 2s ease-in-out infinite'
+          }} />
+          LIVE
+        </span>
       </h3>
+      
+      {/* Header avec bouton refresh */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '1rem 2rem',
+        borderBottom: '1px solid rgba(55, 65, 81, 0.3)',
+        background: 'rgba(15, 15, 26, 0.3)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <span style={{ fontSize: '0.875rem', color: '#9CA3AF' }}>
+            {sortedCryptos.length} cryptomonnaies
+          </span>
+          {lastUpdateTime && (
+            <span style={{ fontSize: '0.75rem', color: '#6B7280' }}>
+              Mis à jour: {lastUpdateTime.toLocaleTimeString('fr-FR')}
+            </span>
+          )}
+        </div>
+        <button
+          onClick={handleForceRefresh}
+          style={{
+            padding: '0.5rem 1rem',
+            background: 'rgba(0, 212, 170, 0.2)',
+            border: '1px solid rgba(0, 212, 170, 0.5)',
+            color: '#00D4AA',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontSize: '0.75rem',
+            fontWeight: '600',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.background = 'rgba(0, 212, 170, 0.3)';
+            e.target.style.transform = 'translateY(-1px)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.background = 'rgba(0, 212, 170, 0.2)';
+            e.target.style.transform = 'translateY(0)';
+          }}
+          title="Actualiser les prix manuellement"
+        >
+          🔄 Refresh
+        </button>
+      </div>
       
       <div className="price-list-header">
         <div className="header-row">

@@ -73,26 +73,50 @@ function App() {
     waitForBackend();
   }, [backendReady]);
 
-  // Connexion WebSocket pour les prix en temps réel
+  // Fonction pour récupérer les prix depuis l'API REST en fallback
+  const fetchPricesFromAPI = async () => {
+    try {
+      console.log('🔄 Récupération des prix depuis l\'API REST...');
+      const response = await fetch(`${API_BASE_URL}/prices`);
+      if (response.ok) {
+        const pricesData = await response.json();
+        console.log('✅ Prix récupérés depuis l\'API REST');
+        setPrices(pricesData);
+      }
+    } catch (error) {
+      console.error('❌ Erreur lors de la récupération des prix depuis l\'API:', error);
+    }
+  };
+
+  // Connexion WebSocket pour les prix en temps réel - VERSION CORRIGÉE
   useEffect(() => {
     if (!backendReady) return;
 
     let websocket = null;
     let reconnectTimeout = null;
+    let isManualClose = false; // Flag pour éviter la reconnexion lors de la déconnexion volontaire
 
     const connectWebSocket = () => {
+      // Ne pas reconnecter si c'est une fermeture manuelle (déconnexion)
+      if (isManualClose) return;
+
       try {
+        console.log('🔄 Tentative de connexion WebSocket...');
         websocket = new WebSocket(WS_URL);
         
         websocket.onopen = () => {
           console.log('✅ Connecté au WebSocket');
           setWs(websocket);
+          
+          // Récupérer immédiatement les prix depuis l'API REST en cas de reconnexion
+          fetchPricesFromAPI();
         };
         
         websocket.onmessage = (event) => {
           try {
             const data = JSON.parse(event.data);
             if (data.type === 'price_update') {
+              console.log('📊 Prix mis à jour via WebSocket');
               setPrices(data.data);
             }
           } catch (error) {
@@ -104,29 +128,37 @@ function App() {
           console.log('🔌 Connexion WebSocket fermée', event.code);
           setWs(null);
           
-          // Reconnexion automatique après 5 secondes si pas volontaire
-          if (event.code !== 1000) {
+          // Reconnexion automatique seulement si pas de fermeture manuelle
+          if (!isManualClose && event.code !== 1000) {
+            console.log('🔄 Programmation de la reconnexion WebSocket dans 3 secondes...');
             reconnectTimeout = setTimeout(() => {
-              console.log('🔄 Tentative de reconnexion WebSocket...');
               connectWebSocket();
-            }, 5000);
+            }, 3000);
           }
         };
         
         websocket.onerror = (error) => {
           console.error('❌ Erreur WebSocket:', error);
+          setWs(null);
         };
         
       } catch (error) {
         console.error('❌ Impossible de créer la connexion WebSocket:', error);
-        // Retry after 5 seconds
-        reconnectTimeout = setTimeout(connectWebSocket, 5000);
+        // Retry after 3 seconds
+        if (!isManualClose) {
+          reconnectTimeout = setTimeout(connectWebSocket, 3000);
+        }
       }
     };
 
+    // Connecter immédiatement et récupérer les prix
     connectWebSocket();
-    
+    fetchPricesFromAPI(); // Récupérer les prix immédiatement
+
     return () => {
+      console.log('🧹 Nettoyage de la connexion WebSocket...');
+      isManualClose = true; // Marquer comme fermeture manuelle
+      
       if (reconnectTimeout) {
         clearTimeout(reconnectTimeout);
       }
@@ -134,7 +166,38 @@ function App() {
         websocket.close(1000); // Code 1000 = fermeture normale
       }
     };
-  }, [backendReady]);
+  }, [backendReady, user]); // ← IMPORTANT: 'user' ajouté dans les dépendances
+
+  // Récupérer les prix quand l'utilisateur se connecte
+  useEffect(() => {
+    if (user && backendReady) {
+      console.log('👤 Utilisateur connecté, récupération des prix...');
+      // Récupérer les prix immédiatement quand l'utilisateur se connecte
+      const fetchInitialPrices = async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/prices`);
+          if (response.ok) {
+            const pricesData = await response.json();
+            console.log('✅ Prix initiaux récupérés pour l\'utilisateur connecté');
+            setPrices(pricesData);
+          }
+        } catch (error) {
+          console.error('❌ Erreur lors de la récupération des prix initiaux:', error);
+        }
+      };
+      
+      fetchInitialPrices();
+    }
+  }, [user, backendReady]);
+
+  // Nettoyer les données à la déconnexion (optionnel)
+  useEffect(() => {
+    if (!user) {
+      console.log('🚪 Utilisateur déconnecté...');
+      // Optionnel : garder les prix même déconnecté, ou les effacer
+      // setPrices({}); // Décommentez si vous voulez effacer les prix à la déconnexion
+    }
+  }, [user]);
 
   // Vérifier l'authentification au démarrage
   useEffect(() => {
@@ -475,6 +538,26 @@ function App() {
     );
   }
 
+  // Si l'utilisateur n'est pas connecté, afficher les écrans de connexion/inscription
+  if (!user) {
+    return (
+      <div className="app">
+        <AnimatedBackground />
+        {showRegister ? (
+          <Register 
+            onRegister={handleRegister}
+            onSwitchToLogin={() => setShowRegister(false)}
+          />
+        ) : (
+          <Login 
+            onLogin={handleLogin}
+            onSwitchToRegister={() => setShowRegister(true)}
+          />
+        )}
+      </div>
+    );
+  }
+
   // Interface principale avec utilisateur connecté
   return (
     <div className="app">
@@ -506,19 +589,19 @@ function App() {
               fontWeight: 'bold',
               color: '#0B0B0F'
             }}>
-              {user.username.charAt(0).toUpperCase()}
+              {user?.username?.charAt(0)?.toUpperCase() || '?'}
             </div>
             <div>
               <span style={{ fontSize: '0.875rem', fontWeight: '600' }}>
-                Bienvenue, {user.username}
+                Bienvenue, {user?.username || 'Utilisateur'}
               </span>
               <div style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>
-                {user.email}
+                {user?.email || 'Email non disponible'}
               </div>
             </div>
           </div>
           <span className="balance">
-            Solde: {formatPrice(parseFloat(user.balance || 0), 'usd')}
+            Solde: {formatPrice(parseFloat(user?.balance || 0), 'usd')}
           </span>
           <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
             <button
@@ -583,7 +666,7 @@ function App() {
               selectedCrypto={selectedCrypto}
               currentPrice={getPriceValue(prices[selectedCrypto], currency)}
               onTrade={executeTrade}
-              userBalance={parseFloat(user.balance || 0)}
+              userBalance={parseFloat(user?.balance || 0)}
               currency={currency}
             />
           </div>
